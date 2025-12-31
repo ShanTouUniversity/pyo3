@@ -1,0 +1,722 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>附录 B：Trait 约束 - PyO3 user guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="PyO3 user guide">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/tabs-52f01167.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-78070eb0.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-c528a6fa.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">PyO3 user guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/tree/main/guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/edit/main/guide/src/trait-bounds.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="在-python-中使用带有-trait-约束的-rust-函数"><a class="header" href="#在-python-中使用带有-trait-约束的-rust-函数">在 Python 中使用带有 trait 约束的 Rust 函数</a></h1>
+<p>PyO3 允许将某些函数和类轻松地从 Rust 转换为 Python（参见<a href="conversions/tables.html">转换表</a>）。<br>然而，当 Rust 代码需要以实现了特定 trait 的类型作为参数时，将其转换为 Python 并不总是直接可行。</p>
+<p>本教程解释了如何将接受 trait 作为参数的 Rust 函数转换，以便在 Python 中使用实现了相同方法的类。</p>
+<p>这有什么用？</p>
+<h2 id="优点"><a class="header" href="#优点">优点</a></h2>
+<ul>
+<li>让 Python 用户也能使用你的 Rust 代码</li>
+<li>可以借助借用检查器在 Rust 中编写复杂的算法</li>
+</ul>
+<h3 id="缺点"><a class="header" href="#缺点">缺点</a></h3>
+<ul>
+<li>性能不如原生 Rust（需要进行类型转换，且部分代码在 Python 中运行）</li>
+<li>需要调整你的代码才能暴露出来</li>
+</ul>
+<h2 id="示例"><a class="header" href="#示例">示例</a></h2>
+<p>我们以一个基本示例开始：实现一个对给定模型进行操作的优化求解器。</p>
+<p>假设我们有一个 <code>solve</code> 函数，它操作一个模型并改变其状态。<br>该函数的参数可以是任何实现了 <code>Model</code> trait 的模型：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span>pub trait Model {
+    fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+    fn compute(&amp;mut self);
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+}
+
+
+pub fn solve&lt;T: Model&gt;(model: &amp;mut T) {
+    println!("神奇的求解器，将模型变为已求解状态");
+}</code></pre>
+<p>假设我们有以下限制：</p>
+<ul>
+<li>我们不能修改这段代码，因为它已在多个 Rust 模型上运行。</li>
+<li>我们还有许多 Python 模型，但由于该求解器在 Python 中不可用，无法求解它们。</li>
+</ul>
+<p>将其实现在 Python 中会很繁琐且容易出错，因为所有功能已经在 Rust 中实现了。</p>
+<p>我们如何通过 PyO3 将此求解器暴露给 Python？</p>
+<h2 id="为-python-类实现-trait-约束"><a class="header" href="#为-python-类实现-trait-约束">为 Python 类实现 trait 约束</a></h2>
+<p>如果一个 Python 类实现了与 <code>Model</code> trait 相同的三个方法，那么逻辑上它应该可以适配使用该求解器。<br>但不能直接传入 <code>Py&lt;PyAny&gt;</code>，因为它并未实现 Rust trait（即使 Python 模型具有所需的方法）。</p>
+<p>为了实现该 trait，我们必须编写一个 Rust 调用 Python 模型的包装器。<br>方法签名必须与 trait 一致，同时记住我们不能为了在 Python 中可用而修改原始的 Rust trait。</p>
+<p>我们想要暴露的 Python 模型如下，它已经包含所有必需的方法：</p>
+<pre><code class="language-python">class Model:
+    def set_variables(self, inputs):
+        self.inputs = inputs
+    def compute(self):
+        self.results = [elt**2 - 3 for elt in self.inputs]
+    def get_results(self):
+        return self.results
+</code></pre>
+<p>以下包装器将从 Rust 调用 Python 模型，并使用一个结构体来保存作为 <code>PyAny</code> 对象的模型：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span>use pyo3::prelude::*;
+use pyo3::types::PyList;
+
+
+<span class="boring">pub trait Model {
+</span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+</span><span class="boring">  fn compute(&amp;mut self);
+</span><span class="boring">  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+</span><span class="boring">}
+</span>
+
+struct UserModel {
+    model: Py&lt;PyAny&gt;,
+}
+
+
+impl Model for UserModel {
+    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+        println!("Rust 正在调用 Python 设置变量");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("set_variables", (PyList::new(py, var).unwrap(),), None)
+                .unwrap();
+        })
+    }
+
+
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!("Rust 正在调用 Python 获取结果");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("get_results", (), None)
+                .unwrap()
+                .extract()
+                .unwrap()
+        })
+    }
+
+
+    fn compute(&amp;mut self) {
+        println!("Rust 正在调用 Python 执行计算");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("compute", (), None)
+                .unwrap();
+        })
+    }
+}</code></pre>
+<p>现在这部分已实现，让我们将模型包装器暴露给 Python。<br>添加 PyO3 注解并添加构造函数：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">fn main() {}
+</span><span class="boring">pub trait Model {
+</span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+</span><span class="boring">  fn compute(&amp;mut self);
+</span><span class="boring">  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+</span><span class="boring">}
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyclass]
+struct UserModel {
+    model: Py&lt;PyAny&gt;,
+}
+
+
+#[pymethods]
+impl UserModel {
+    #[new]
+    pub fn new(model: Py&lt;PyAny&gt;) -&gt; Self {
+        UserModel { model }
+    }
+}
+
+
+#[pymodule]
+mod trait_exposure {
+    #[pymodule_export]
+    use super::UserModel;
+}</code></pre>
+<p>现在我们为 trait 实现添加 PyO3 注解：</p>
+<pre><code class="language-rust ignore">#[pymethods]
+impl Model for UserModel {
+    // 之前的 trait 实现
+}</code></pre>
+<p>然而，上述代码无法编译。<br>编译错误如下：<code>error: #[pymethods] cannot be used on trait impl blocks</code></p>
+<p>这很麻烦！<br>但我们可以通过为这些函数编写第二个包装器来直接调用它们。<br>该包装器还将处理 Python 和 Rust 之间的类型转换。</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::PyList;
+</span><span class="boring">
+</span><span class="boring">pub trait Model {
+</span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+</span><span class="boring">  fn compute(&amp;mut self);
+</span><span class="boring">  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[pyclass]
+</span><span class="boring">struct UserModel {
+</span><span class="boring">    model: Py&lt;PyAny&gt;,
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">impl Model for UserModel {
+</span><span class="boring"> fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+</span><span class="boring">     println!("Rust 正在调用 Python 设置变量");
+</span><span class="boring">     Python::attach(|py| {
+</span><span class="boring">         self.model.bind(py)
+</span><span class="boring">             .call_method("set_variables", (PyList::new(py, var).unwrap(),), None)
+</span><span class="boring">             .unwrap();
+</span><span class="boring">     })
+</span><span class="boring"> }
+</span><span class="boring">
+</span><span class="boring"> fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+</span><span class="boring">     println!("Rust 正在调用 Python 获取结果");
+</span><span class="boring">     Python::attach(|py| {
+</span><span class="boring">         self.model
+</span><span class="boring">             .bind(py)
+</span><span class="boring">             .call_method("get_results", (), None)
+</span><span class="boring">             .unwrap()
+</span><span class="boring">             .extract()
+</span><span class="boring">             .unwrap()
+</span><span class="boring">     })
+</span><span class="boring"> }
+</span><span class="boring">
+</span><span class="boring"> fn compute(&amp;mut self) {
+</span><span class="boring">     println!("Rust 正在调用 Python 执行计算");
+</span><span class="boring">     Python::attach(|py| {
+</span><span class="boring">         self.model
+</span><span class="boring">             .bind(py)
+</span><span class="boring">             .call_method("compute", (), None)
+</span><span class="boring">             .unwrap();
+</span><span class="boring">     })
+</span><span class="boring">
+</span><span class="boring"> }
+</span><span class="boring">}
+</span>
+
+#[pymethods]
+impl UserModel {
+    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) {
+        println!("Python 调用 Rust 设置变量");
+        Model::set_variables(self, &amp;var)
+    }
+
+
+    pub fn get_results(&amp;mut self) -&gt; Vec&lt;f64&gt; {
+        println!("Python 调用 Rust 获取结果");
+        Model::get_results(self)
+    }
+
+
+    pub fn compute(&amp;mut self) {
+        println!("Python 调用 Rust 执行计算");
+        Model::compute(self)
+    }
+}</code></pre>
+<p>此包装器处理了 PyO3 要求与 trait 之间的类型转换。<br>为满足 PyO3 要求，该包装器必须：</p>
+<ul>
+<li>返回 <code>PyResult</code> 类型的对象</li>
+<li>方法签名中只能使用值，不能使用引用</li>
+</ul>
+<p>现在运行 Python 文件：</p>
+<pre><code class="language-python">class Model:
+    def set_variables(self, inputs):
+        self.inputs = inputs
+    def compute(self):
+        self.results = [elt**2 - 3 for elt in self.inputs]
+    def get_results(self):
+        return self.results
+
+
+if __name__=="__main__":
+  import trait_exposure
+
+
+  myModel = Model()
+  my_rust_model = trait_exposure.UserModel(myModel)
+  my_rust_model.set_variables([2.0])
+  print("从 Python 打印值: ", myModel.inputs)
+  my_rust_model.compute()
+  print("通过 Rust 从 Python 打印值: ", my_rust_model.get_results())
+  print("直接从 Python 打印值: ", myModel.get_results())
+</code></pre>
+<p>输出结果为：</p>
+<pre><code class="language-block">Set variables from Python calling Rust
+Set variables from Rust calling Python
+Print value from Python:  [2.0]
+Compute from Python calling Rust
+Compute from Rust calling Python
+Get results from Python calling Rust
+Get results from Rust calling Python
+Print value from Python through Rust:  [1.0]
+Print value directly from Python:  [1.0]
+</code></pre>
+<p>我们现在已成功将实现了 <code>Model</code> trait 的 Rust 模型暴露给了 Python！</p>
+<p>接下来我们将暴露 <code>solve</code> 函数，但在那之前，先谈谈类型错误。</p>
+<h2 id="python-中的类型错误"><a class="header" href="#python-中的类型错误">Python 中的类型错误</a></h2>
+<p>当你在 Python 中使用类型错误时会发生什么？如何改善错误提示信息？</p>
+<h3 id="python-函数参数类型错误"><a class="header" href="#python-函数参数类型错误">Python 函数参数类型错误</a></h3>
+<p>假设第一种情况，在你的 Python 文件中使用 <code>my_rust_model.set_variables(2.0)</code> 而不是 <code>my_rust_model.set_variables([2.0])</code>。</p>
+<p>Rust 签名期望一个向量，对应 Python 中的列表。<br>如果传入单个值而非向量，会发生什么？</p>
+<p>在执行 Python 时，我们会得到：</p>
+<pre><code class="language-block">File "main.py", line 15, in &lt;module&gt;
+   my_rust_model.set_variables(2)
+TypeError
+</code></pre>
+<p>这是一个类型错误，Python 明确指出了问题，因此很容易识别和解决。</p>
+<h3 id="python-方法签名类型错误"><a class="header" href="#python-方法签名类型错误">Python 方法签名类型错误</a></h3>
+<p>现在假设我们的 Model 类中某个方法的返回类型错误，例如 <code>get_results</code> 方法在 Rust 中预期返回一个 <code>Vec&lt;f64&gt;</code>，即 Python 中的列表。</p>
+<pre><code class="language-python">class Model:
+    def set_variables(self, inputs):
+        self.inputs = inputs
+    def compute(self):
+        self.results = [elt**2 -3 for elt in self.inputs]
+    def get_results(self):
+        return self.results[0]
+        #return self.results &lt;-- 这才是正确的输出
+</code></pre>
+<p>这个调用会导致以下 panic：</p>
+<pre><code class="language-block">pyo3_runtime.PanicException: called `Result::unwrap()` on an `Err` value: PyErr { type: Py(0x10dcf79f0, PhantomData) }
+</code></pre>
+<p>这个错误信息对不了解 Rust 的 Python 用户，或不知道使用了 PyO3 的人来说毫无帮助。</p>
+<p>但既然我们负责将 Rust 代码提供给 Python 使用，就可以对此做些改进。问题在于我们在任何可能的地方都调用了 <code>unwrap</code>，因此 PyO3 的任何 panic 都会直接传递给最终用户。</p>
+<p>让我们修改执行类型转换的代码，以便向 Python 用户提供更有帮助的错误信息：</p>
+<p>我们在 <code>get_results</code> 方法中使用了以下调用以执行类型转换：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::PyList;
+</span><span class="boring">
+</span><span class="boring">pub trait Model {
+</span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+</span><span class="boring">  fn compute(&amp;mut self);
+</span><span class="boring">  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[pyclass]
+</span><span class="boring">struct UserModel {
+</span><span class="boring">    model: Py&lt;PyAny&gt;,
+</span><span class="boring">}
+</span>
+impl Model for UserModel {
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!("Rust calling Python to get the results");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("get_results", (), None)
+                .unwrap()
+                .extract()
+                .unwrap()
+        })
+    }
+<span class="boring">    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+</span><span class="boring">        println!("Rust calling Python to set the variables");
+</span><span class="boring">        Python::attach(|py| {
+</span><span class="boring">            self.model.bind(py)
+</span><span class="boring">                .call_method("set_variables", (PyList::new(py, var).unwrap(),), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    fn compute(&amp;mut self) {
+</span><span class="boring">        println!("Rust calling Python to perform the computation");
+</span><span class="boring">        Python::attach(|py| {
+</span><span class="boring">            self.model
+</span><span class="boring">                .bind(py)
+</span><span class="boring">                .call_method("compute", (), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span>}</code></pre>
+<p>让我们逐步拆解它，以实现更好的错误处理：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::PyList;
+</span><span class="boring">
+</span><span class="boring">pub trait Model {
+</span><span class="boring">  fn set_variables(&amp;mut self, inputs: &amp;Vec&lt;f64&gt;);
+</span><span class="boring">  fn compute(&amp;mut self);
+</span><span class="boring">  fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">#[pyclass]
+</span><span class="boring">struct UserModel {
+</span><span class="boring">    model: Py&lt;PyAny&gt;,
+</span><span class="boring">}
+</span>
+impl Model for UserModel {
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!("Get results from Rust calling Python");
+        Python::attach(|py| {
+            let py_result: Bound&lt;'_, PyAny&gt; = self
+                .model
+                .bind(py)
+                .call_method("get_results", (), None)
+                .unwrap();
+
+            if py_result.get_type().name().unwrap() != "list" {
+                panic!(
+                    "Expected a list for the get_results() method signature, got {}",
+                    py_result.get_type().name().unwrap()
+                );
+            }
+            py_result.extract()
+        })
+        .unwrap()
+    }
+<span class="boring">    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+</span><span class="boring">        println!("Rust calling Python to set the variables");
+</span><span class="boring">        Python::attach(|py| {
+</span><span class="boring">            let py_model = self.model.bind(py)
+</span><span class="boring">                .call_method("set_variables", (PyList::new(py, var).unwrap(),), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span><span class="boring">
+</span><span class="boring">    fn compute(&amp;mut self) {
+</span><span class="boring">        println!("Rust calling Python to perform the computation");
+</span><span class="boring">        Python::attach(|py| {
+</span><span class="boring">            self.model
+</span><span class="boring">                .bind(py)
+</span><span class="boring">                .call_method("compute", (), None)
+</span><span class="boring">                .unwrap();
+</span><span class="boring">        })
+</span><span class="boring">    }
+</span>}</code></pre>
+<p>通过这样做，你可以捕获 Python 计算的结果并检查其类型，以便在执行 <code>unwrap</code> 之前提供更清晰的错误信息。</p>
+<p>当然，这并未涵盖所有可能的错误输出情况：用户可能会返回一个字符串列表，而不是浮点数列表。在这种情况下，由于 PyO3 的原因仍然会发生运行时 panic，但非 Rust 用户会更难理解错误信息。</p>
+<p>开发者在暴露 Rust 代码时，需要自行决定在 Python 类型错误处理和改进错误消息方面投入多少精力。</p>
+<h2 id="最终代码"><a class="header" href="#最终代码">最终代码</a></h2>
+<p>现在，让我们将 <code>solve()</code> 函数暴露出来，使其可以从 Python 调用。</p>
+<p>我们不能直接将 <code>solve</code> 函数暴露给 Python，因为类型转换无法完成——它需要一个实现了 <code>Model</code> trait 的对象作为输入。</p>
+<p>然而，<code>UserModel</code> 已经实现了该 trait。因此，我们可以编写一个函数包装器，接收已经被暴露给 Python 的 <code>UserModel</code> 作为参数，从而调用核心函数 <code>solve</code>。</p>
+<p>此外，还需要将结构体声明为 <code>pub</code>（公共）。</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">fn main() {}
+</span>use pyo3::prelude::*;
+use pyo3::types::PyList;
+
+pub trait Model {
+    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;);
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt;;
+    fn compute(&amp;mut self);
+}
+
+pub fn solve&lt;T: Model&gt;(model: &amp;mut T) {
+    println!("Magic solver that mutates the model into a resolved state");
+}
+
+#[pyfunction]
+#[pyo3(name = "solve")]
+pub fn solve_wrapper(model: &amp;mut UserModel) {
+    solve(model);
+}
+
+#[pyclass]
+pub struct UserModel {
+    model: Py&lt;PyAny&gt;,
+}
+
+#[pymethods]
+impl UserModel {
+    #[new]
+    pub fn new(model: Py&lt;PyAny&gt;) -&gt; Self {
+        UserModel { model }
+    }
+
+    pub fn set_variables(&amp;mut self, var: Vec&lt;f64&gt;) {
+        println!("Set variables from Python calling Rust");
+        Model::set_variables(self, &amp;var)
+    }
+
+    pub fn get_results(&amp;mut self) -&gt; Vec&lt;f64&gt; {
+        println!("Get results from Python calling Rust");
+        Model::get_results(self)
+    }
+
+    pub fn compute(&amp;mut self) {
+        Model::compute(self)
+    }
+}
+
+#[pymodule]
+mod trait_exposure {
+    #[pymodule_export]
+    use super::{UserModel, solve_wrapper};
+}
+
+impl Model for UserModel {
+    fn set_variables(&amp;mut self, var: &amp;Vec&lt;f64&gt;) {
+        println!("Rust calling Python to set the variables");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("set_variables", (PyList::new(py, var).unwrap(),), None)
+                .unwrap();
+        })
+    }
+
+    fn get_results(&amp;self) -&gt; Vec&lt;f64&gt; {
+        println!("Get results from Rust calling Python");
+        Python::attach(|py| {
+            let py_result: Bound&lt;'_, PyAny&gt; = self
+                .model
+                .bind(py)
+                .call_method("get_results", (), None)
+                .unwrap();
+
+            if py_result.get_type().name().unwrap() != "list" {
+                panic!(
+                    "Expected a list for the get_results() method signature, got {}",
+                    py_result.get_type().name().unwrap()
+                );
+            }
+            py_result.extract()
+        })
+        .unwrap()
+    }
+
+    fn compute(&amp;mut self) {
+        println!("Rust calling Python to perform the computation");
+        Python::attach(|py| {
+            self.model
+                .bind(py)
+                .call_method("compute", (), None)
+                .unwrap();
+        })
+    }
+}</code></pre>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="migration.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="python-typing-hints.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="migration.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="python-typing-hints.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/tabs-6977231d.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

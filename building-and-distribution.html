@@ -1,0 +1,479 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>构建和分发 - PyO3 user guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="PyO3 user guide">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/tabs-52f01167.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-78070eb0.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-c528a6fa.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">PyO3 user guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/tree/main/guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/edit/main/guide/src/building-and-distribution.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="构建与分发"><a class="header" href="#构建与分发">构建与分发</a></h1>
+<p>本章将详细介绍如何使用 PyO3 构建和分发项目。具体实现方式取决于项目的类型：是以 Rust 实现的 Python 模块，还是嵌入 Python 的 Rust 可执行程序。对于这两类项目，都存在一些共性问题，例如目标 Python 版本的选择和应使用的<a href="https://zh.wikipedia.org/wiki/链接器_(计算)">链接器</a>参数。</p>
+<p>本章内容面向已经阅读过 PyO3 <a href="./index.html">README</a> 的用户，依次介绍针对 Python 模块和 Rust 可执行程序可做的各种选择，最后还有一节关于使用 PyO3 进行交叉编译的内容。</p>
+<p>另有一个专门的子章节介绍<a href="./building-and-distribution/multiple-python-versions.html">支持多个 Python 版本</a>的方法。</p>
+<h2 id="配置-python-版本"><a class="header" href="#配置-python-版本">配置 Python 版本</a></h2>
+<p>PyO3 使用一个构建脚本（由 <a href="https://github.com/PyO3/pyo3/tree/main/pyo3-build-config"><code>pyo3-build-config</code></a> crate 支持）来确定 Python 版本并设置正确的链接器参数。默认情况下，它会按以下顺序尝试：</p>
+<ul>
+<li>当前激活的 Python 虚拟环境。</li>
+<li><code>python</code> 可执行文件（如果它是 Python 3 解释器）。</li>
+<li><code>python3</code> 可执行文件。</li>
+</ul>
+<p>你可以通过设置 <code>PYO3_PYTHON</code> 环境变量来覆盖 Python 解释器，例如：<code>PYO3_PYTHON=python3.7</code>、<code>PYO3_PYTHON=/usr/bin/python3.9</code>，甚至是 PyPy 解释器 <code>PYO3_PYTHON=pypy3</code>。</p>
+<p>一旦定位到 Python 解释器，<code>pyo3-build-config</code> 就会运行该解释器，查询 <code>sysconfig</code> 模块中的信息，以配置其余的编译过程。</p>
+<p>要验证 PyO3 将使用的配置，可以设置环境变量 <code>PYO3_PRINT_CONFIG=1</code> 后运行编译。以下是一个示例输出：</p>
+<pre><code class="language-console">$ PYO3_PRINT_CONFIG=1 cargo build
+   Compiling pyo3 v0.14.1 (/home/david/dev/pyo3)
+error: failed to run custom build command for `pyo3 v0.14.1 (/home/david/dev/pyo3)`
+
+Caused by:
+  process didn't exit successfully: `/home/david/dev/pyo3/target/debug/build/pyo3-7a8cf4fe22e959b7/build-script-build` (exit status: 101)
+  --- stdout
+  cargo:rerun-if-env-changed=PYO3_CROSS
+  cargo:rerun-if-env-changed=PYO3_CROSS_LIB_DIR
+  cargo:rerun-if-env-changed=PYO3_CROSS_PYTHON_VERSION
+  cargo:rerun-if-env-changed=PYO3_PRINT_CONFIG
+
+  -- PYO3_PRINT_CONFIG=1 is set, printing configuration and halting compile --
+  implementation=CPython
+  version=3.8
+  shared=true
+  abi3=false
+  lib_name=python3.8
+  lib_dir=/usr/lib
+  executable=/usr/bin/python
+  pointer_width=64
+  build_flags=
+  suppress_build_script_link_lines=false
+</code></pre>
+<p><code>PYO3_ENVIRONMENT_SIGNATURE</code> 环境变量可在其值更改时触发重新构建，除此之外没有其他作用。</p>
+<h3 id="进阶配置文件"><a class="header" href="#进阶配置文件">进阶：配置文件</a></h3>
+<p>如果将上述 <code>PYO3_PRINT_CONFIG</code> 输出的配置保存为文件，就可以手动修改内容，并通过 <code>PYO3_CONFIG_FILE</code> 环境变量重新导入 PyO3。</p>
+<p>如果你的构建环境足够特殊，导致 PyO3 默认的配置检测机制失效，使用配置文件可以提供足够的灵活性以使 PyO3 正常工作。有关支持的完整选项，请参阅 <a href="https://docs.rs/pyo3-build-config/{{#PYO3_DOCS_VERSION}}/pyo3_build_config/struct.InterpreterConfig.html"><code>InterpreterConfig</code> 结构体</a> 的文档。</p>
+<h2 id="构建-python-扩展模块"><a class="header" href="#构建-python-扩展模块">构建 Python 扩展模块</a></h2>
+<p>Python 扩展模块的编译方式取决于其目标操作系统（和架构）。除了多种操作系统（和架构）之外，还有许多活跃支持的不同 Python 版本。上传至 <a href="https://pypi.org/">PyPI</a> 的包通常希望上传覆盖多种 OS/arch/version 组合的预编译“wheel”包，以便所有平台上的用户都不需要自行编译。包提供者可以选择启用“abi3”受限 Python API，这使得他们的 wheel 包可以在多个 Python 版本上使用，从而减少需要编译的 wheel 数量，但会限制可用的功能。</p>
+<p>有多种方法可以实现这一点：可以使用 <code>cargo</code> 来构建扩展模块（并辅以一些手动操作，操作方式随操作系统不同而异）。PyO3 生态系统提供了两种打包工具 <a href="https://github.com/PyO3/maturin"><code>maturin</code></a> 和 <a href="https://github.com/PyO3/setuptools-rust"><code>setuptools-rust</code></a>，它们可以屏蔽操作系统差异，并支持构建用于 PyPI 上传的 wheel 包。</p>
+<p>PyO3 提供了一些 Cargo 特性（feature）来配置构建 Python 扩展模块的项目：</p>
+<ul>
+<li><code>extension-module</code> 特性，构建 Python 扩展模块时必须启用。</li>
+<li><code>abi3</code> 特性及其版本特定的 <code>abi3-pyXY</code> 变体，用于启用受限 Python API，以便在单个 wheel 中支持多个 Python 版本。</li>
+</ul>
+<p>本节将先分别介绍这两种打包工具，然后描述不使用这些工具时的手动构建方法。接着解释 <code>extension-module</code> 特性，最后介绍 PyO3 的 <code>abi3</code> 特性。</p>
+<h3 id="打包工具"><a class="header" href="#打包工具">打包工具</a></h3>
+<p>PyO3 生态系统主要有两个工具可用来抽象 Python 扩展模块的开发流程：</p>
+<ul>
+<li><a href="https://github.com/PyO3/maturin"><code>maturin</code></a> 是一个命令行工具，用于构建、打包和上传 Python 模块。它对项目结构有明确的约定，因此几乎无需额外配置。对于从零开始构建 Python 扩展且不需要灵活性的用户来说，这是一个理想的选择。</li>
+<li><a href="https://github.com/PyO3/setuptools-rust"><code>setuptools-rust</code></a> 是 <code>setuptools</code> 的插件，为 <code>setup.py</code> 配置文件添加了额外的关键字参数。相比 <code>maturin</code> 需要更多配置，但这为那些需将 Rust 添加到现有 Python 包（不能满足 <code>maturin</code> 约束）的用户提供了更大的灵活性。</li>
+</ul>
+<p>请查阅各项目的文档，了解如何开始使用以及如何上传 wheel 到 PyPI 的完整细节。需要注意的是，虽然 <code>maturin</code> 可以开箱即用地构建符合 <a href="https://github.com/pypa/manylinux">manylinux</a> 标准的 wheel，但 <code>setuptools-rust</code> 需要更多工作，<a href="https://setuptools-rust.readthedocs.io/en/latest/building_wheels.html">依赖 Docker</a> 来实现这一目标。</p>
+<p>PyO3 仓库中还有 <a href="https://github.com/PyO3/pyo3/tree/main/examples/maturin-starter"><code>maturin-starter</code></a> 和 <a href="https://github.com/PyO3/pyo3/tree/main/examples/setuptools-rust-starter"><code>setuptools-rust-starter</code></a> 示例。</p>
+<h3 id="手动构建"><a class="header" href="#手动构建">手动构建</a></h3>
+<p>要手动构建基于 PyO3 的 Python 扩展模块，首先在使用了 PyO3 的 <code>extension-module</code> 特性且具有 <a href="https://doc.rust-lang.org/cargo/reference/cargo-targets.html#the-crate-type-field"><code>cdylib</code> crate 类型</a>的库项目中正常运行 <code>cargo build</code>。</p>
+<p>构建完成后，将 Cargo <code>target/</code> 目录中的共享库创建符号链接（或复制并重命名）到目标输出目录：</p>
+<ul>
+<li>在 macOS 上，将 <code>libyour_module.dylib</code> 重命名为 <code>your_module.so</code>。</li>
+<li>在 Windows 上，将 <code>libyour_module.dll</code> 重命名为 <code>your_module.pyd</code>。</li>
+<li>在 Linux 上，将 <code>libyour_module.so</code> 重命名为 <code>your_module.so</code>。</li>
+</ul>
+<p>然后在输出目录中打开 Python shell，就可以执行 <code>import your_module</code> 了。</p>
+<p>如果要将库打包分发，应在文件名中包含<a href="#platform-tags">平台标签</a>以标明该库所编译的目标 Python 解释器。这可以防止不兼容的解释器尝试导入你的库。如果你正在为 PyPy 编译，则<em>必须</em>包含平台标签，否则 PyPy 会忽略该模块。</p>
+<h4 id="bazel-构建"><a class="header" href="#bazel-构建">Bazel 构建</a></h4>
+<p>要在 Bazel 中使用 PyO3，需要手动配置 PyO3、PyO3-ffi 和 PyO3-macros，特别是确保使用正确的 Python 标志来编译你打算使用的版本。例如参考：</p>
+<ol>
+<li><a href="https://github.com/abrisco/rules_pyo3">github.com/abrisco/rules_pyo3</a> —— 用于构建扩展模块的通用规则。</li>
+<li><a href="https://github.com/OliverFM/pytorch_with_gazelle">github.com/OliverFM/pytorch_with_gazelle</a> —— 一个使用 PyO3、PyTorch 和 Gazelle 生成 Python 构建文件的最小示例仓库。</li>
+<li><a href="https://github.com/TheButlah/rules_pyo3">github.com/TheButlah/rules_pyo3</a> —— 稍显过时。</li>
+</ol>
+<h4 id="平台标签"><a class="header" href="#平台标签">平台标签</a></h4>
+<p>除了上述建议的 <code>.so</code> 或 <code>.pyd</code> 扩展名外（依操作系统而定），你还可以在共享库扩展名前加上平台标签，以表明它兼容的解释器。你可以通过 <code>sysconfig</code> 模块查询解释器的平台标签。以下是一些示例输出：</p>
+<pre><code class="language-bash"># Python 3.10 上的 macOS
+.cpython-310-darwin.so
+
+# Linux 上的 PyPy 7.3 (对应 Python 3.9)
+$ python -c 'import sysconfig; print(sysconfig.get_config_var("EXT_SUFFIX"))'
+.pypy39-pp73-x86_64-linux-gnu.so
+</code></pre>
+<p>因此，例如在 macOS 上 CPython 3.10 的有效模块库名称为 <code>your_module.cpython-310-darwin.so</code>，而在 Linux 上为 PyPy 7.3 编译的等效名称为 <code>your_module.pypy39-pp73-x86_64-linux-gnu.so</code>。</p>
+<p>有关平台标签的更多背景信息，请参阅 <a href="https://peps.python.org/pep-3149/">PEP 3149</a>。</p>
+<h4 id="macos"><a class="header" href="#macos">macOS</a></h4>
+<p>在 macOS 上，由于 <code>extension-module</code> 特性禁用了对 <code>libpython</code> 的链接（<a href="#the-extension-module-feature">见下一节</a>），需要设置一些额外的链接器参数。<code>maturin</code> 和 <code>setuptools-rust</code> 都会自动为 PyO3 传递这些参数，但手动构建的项目需要直接设置这些参数才能支持 macOS。</p>
+<p>设置正确链接器参数最简单的方法是在项目中添加一个 <a href="https://doc.rust-lang.org/cargo/reference/build-scripts.html"><code>build.rs</code></a>，内容如下：</p>
+<pre><code class="language-rust ignore">fn main() {
+    pyo3_build_config::add_extension_module_link_args();
+}</code></pre>
+<p>记得同时将 <code>pyo3-build-config</code> 添加到 <code>Cargo.toml</code> 的 <code>build-dependencies</code> 部分。</p>
+<p>另一种不使用 <code>pyo3-build-config</code> 的方法是在 cargo 配置文件（如 <code>.cargo/config.toml</code>）中添加以下内容：</p>
+<pre><code class="language-toml">[target.x86_64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup",
+]
+
+[target.aarch64-apple-darwin]
+rustflags = [
+  "-C", "link-arg=-undefined",
+  "-C", "link-arg=dynamic_lookup",
+]
+```使用 MacOS 系统自带的 python3（`/usr/bin/python3`，而非通过 homebrew、pyenv、nix 等方式安装的 Python）可能会导致运行时错误，例如 `Library not loaded: @rpath/Python3.framework/Versions/3.8/Python3`。
+
+设置正确链接参数最简单的方法是添加一个 `build.rs` 文件，内容如下：
+
+```rust,ignore
+fn main() {
+    pyo3_build_config::add_python_framework_link_args();
+}
+</code></pre>
+<p>或者也可以在 <code>.cargo/config.toml</code> 中添加如下配置：</p>
+<pre><code class="language-toml">[build]
+rustflags = [
+  "-C", "link-args=-Wl,-rpath,/Library/Developer/CommandLineTools/Library/Frameworks",
+]
+</code></pre>
+<p>关于 MacOS 链接问题的更多讨论和解决方案，<a href="https://github.com/PyO3/pyo3/issues/1800#issuecomment-906786649">请参见此问题</a>。</p>
+<p>最后，请注意在 MacOS 上使用 <code>extension-module</code> 特性时，如果不加上 <code>--no-default-features</code> 标志，<code>cargo test</code> 将会失败（详见 <a href="https://pyo3.rs/main/faq.html#i-cant-run-cargo-test-or-i-cant-build-in-a-cargo-workspace-im-having-linker-issues-like-symbol-not-found-or-undefined-reference-to-_pyexc_systemerror">常见问题解答</a>）。</p>
+<h3 id="extension-module-特性"><a class="header" href="#extension-module-特性"><code>extension-module</code> 特性</a></h3>
+<p>PyO3 的 <code>extension-module</code> 特性用于在 Unix 目标平台上禁用对 <code>libpython</code> 的<a href="https://en.wikipedia.org/wiki/Linker_(computing)">链接</a>。</p>
+<p>这是必要的，因为默认情况下 PyO3 会链接到 <code>libpython</code>，这使得二进制文件、测试和示例可以“开箱即用”。然而，为了符合 <a href="https://www.python.org/dev/peps/pep-0513/">manylinux</a> 标准，Unix 上的 Python 扩展模块不得链接 <code>libpython</code>。</p>
+<p>不链接 <code>libpython</code> 的缺点是，那些通常需要嵌入 Python 的二进制文件、测试和示例将无法构建。如果你在一个项目中同时包含扩展模块和其他输出，则需要使用可选的 Cargo 特性，在构建非扩展模块时禁用 <code>extension-module</code>。有关示例解决方案，请参见 <a href="faq.html#i-cant-run-cargo-test-or-i-cant-build-in-a-cargo-workspace-im-having-linker-issues-like-symbol-not-found-or-undefined-reference-to-_pyexc_systemerror">常见问题解答</a>。</p>
+<h3 id="py_limited_apiabi3"><a class="header" href="#py_limited_apiabi3"><code>Py_LIMITED_API</code>/<code>abi3</code></a></h3>
+<p>默认情况下，Python 扩展模块只能用于与其编译时所使用的 Python 版本相同的环境中。例如，为 Python 3.5 构建的扩展模块无法在 Python 3.8 中导入。<a href="https://www.python.org/dev/peps/pep-0384/">PEP 384</a> 引入了“受限 Python API”的概念，它拥有稳定的 ABI，使用该 API 构建的扩展模块可以在多个 Python 版本中使用。这也被称为 <code>abi3</code>。</p>
+<p>使用受限 Python API 构建扩展模块的优势在于，软件包分发者只需为每个操作系统/架构构建并分发一个版本，用户就可以在其所有符合最低版本要求的 Python 版本上安装使用。缺点是 PyO3 无法使用那些依赖于已知确切 Python 版本才能启用的优化。是否对此敏感取决于你的扩展模块的具体情况。你也可以设计你的扩展模块，使其既可分发 <code>abi3</code> 轮子，又允许从源码编译的用户获得额外的优化 —— 请参阅本指南中的 <a href="./building-and-distribution/multiple-python-versions.html">多 Python 版本支持</a> 部分，特别是 <code>#[cfg(Py_LIMITED_API)]</code> 标志。</p>
+<p>在构建 Python 轮子包时使用 <code>abi3</code>，需要完成以下三个步骤：</p>
+<ol>
+<li>
+<p>在 <code>pyo3</code> 中启用 <code>abi3</code> 特性。这确保 <code>pyo3</code> 只调用属于稳定 API 的 Python C-API 函数，并且在 Windows 上也确保项目链接到正确的共享对象（其他平台无需特殊行为）：</p>
+<pre><code class="language-toml">[dependencies]
+pyo3 = { {{#PYO3_CRATE_VERSION}}, features = ["abi3"] }
+</code></pre>
+</li>
+<li>
+<p>确保构建出的共享对象被正确标记为 <code>abi3</code>。这通过告知构建系统你正在使用受限 API 来实现。<a href="https://github.com/PyO3/maturin"><code>maturin</code></a> &gt;= 0.9.0 和 <a href="https://github.com/PyO3/setuptools-rust"><code>setuptools-rust</code></a> &gt;= 0.11.4 均支持 <code>abi3</code> 轮子。</p>
+<p>更多信息请参见 <a href="https://github.com/PyO3/maturin/pull/353">相关 PR</a> 和 <a href="https://github.com/PyO3/setuptools-rust/pull/82">另一个 PR</a>。</p>
+</li>
+<li>
+<p>确保 <code>.whl</code> 文件被正确标记为 <code>abi3</code>。对于使用 <code>setuptools</code> 的项目，可通过向 <code>setup.py bdist_wheel</code> 传递 <code>--py-limited-api=cp3x</code> 参数实现（其中 <code>x</code> 是轮子所支持的最低 Python 版本，例如支持 Python 3.5 时使用 <code>--py-limited-api=cp35</code>）。</p>
+</li>
+</ol>
+<h4 id="abi3-的最低-python-版本"><a class="header" href="#abi3-的最低-python-版本"><code>abi3</code> 的最低 Python 版本</a></h4>
+<p>由于单个 <code>abi3</code> 轮子可用于多个不同的 Python 版本，PyO3 提供了 <code>abi3-py37</code>、<code>abi3-py38</code>、<code>abi3-py39</code> 等特性标志来设置你的 <code>abi3</code> 轮子所需的最低 Python 版本。例如，如果你设置了 <code>abi3-py37</code> 特性，你的扩展轮子就可以在 Python 3.7 及以上版本中使用。<code>maturin</code> 和 <code>setuptools-rust</code> 会将轮子命名为类似 <code>my-extension-1.0-cp37-abi3-manylinux2020_x86_64.whl</code> 的形式。</p>
+<p>由于你的扩展模块可能在多个不同的 Python 版本中运行，有时你可能需要在运行时检查 Python 版本来定制行为。请参阅本指南 <a href="./building-and-distribution/multiple-python-versions.html#checking-the-python-version-at-runtime">支持运行时多 Python 版本</a> 的相关部分。</p>
+<p>PyO3 仅能将你的扩展模块链接到等于或低于你当前主机 Python 版本的 <code>abi3</code> 版本。例如，如果你设置了 <code>abi3-py38</code> 并尝试使用 Python 3.7 主机编译，构建将失败。</p>
+<blockquote>
+<p>注意：如果你同时设置了多个 <code>abi3</code> 版本特性标志，最低版本始终生效。例如，当同时设置 <code>abi3-py37</code> 和 <code>abi3-py38</code> 时，PyO3 将构建一个支持 Python 3.7 及以上版本的轮子。</p>
+</blockquote>
+<h4 id="在没有-python-解释器的情况下构建-abi3-扩展"><a class="header" href="#在没有-python-解释器的情况下构建-abi3-扩展">在没有 Python 解释器的情况下构建 <code>abi3</code> 扩展</a></h4>
+<p>作为一个高级特性，你可以通过设置环境变量 <code>PYO3_NO_PYTHON</code> 在不调用 Python 解释器的情况下构建 PyO3 轮子。此外，如果构建主机上的 Python 解释器未找到、版本过旧或不可用，PyO3 仍会在显示警告信息后尝试编译 <code>abi3</code> 扩展模块。在类 Unix 系统上，此功能无条件可用；在 Windows 上，你还必须设置 <code>RUSTFLAGS</code> 环境变量，使其包含 <code>-L native=/path/to/python/libs</code>，以便链接器能找到 <code>python3.lib</code>。</p>
+<p>如果 <code>python3.dll</code> 导入库不可用，可以启用实验性的 <code>generate-import-lib</code> crate 特性，PyO3 将自动创建并使用所需库。</p>
+<p><em>注意</em>：MSVC 目标需要 <code>llvm-dlltool</code> 工具（LLVM binutils 的一部分）位于 <code>PATH</code> 中，才能使自动导入库生成功能正常工作。</p>
+<h4 id="缺失的功能"><a class="header" href="#缺失的功能">缺失的功能</a></h4>
+<p>由于 Python API 的限制，当为 <code>abi3</code> 编译时，部分 <code>pyo3</code> 功能无法使用，包括：</p>
+<ul>
+<li><code>#[pyo3(text_signature = "...")]</code> 在 Python 3.10 之前不支持类。</li>
+<li>类上的 <code>dict</code> 和 <code>weakref</code> 选项在 Python 3.9 之前不受支持。</li>
+<li>缓冲区 API 在 Python 3.11 之前不受支持。</li>
+<li>依赖于已知确切 Python 版本的优化功能。</li>
+</ul>
+<h2 id="在-rust-中嵌入-python"><a class="header" href="#在-rust-中嵌入-python">在 Rust 中嵌入 Python</a></h2>
+<p>如果你想在 Rust 程序中嵌入 Python 解释器，有两种模式可选：动态嵌入和静态嵌入。我们将在接下来的部分介绍这两种模式，它们也会影响你的程序分发方式。与其自行学习如何实现，你可能更愿意使用像 <a href="https://github.com/indygreg/PyOxidizer">PyOxidizer</a> 这样的项目，将你的应用程序及其所有依赖打包成单个文件。</p>
+<p>PyO3 会根据你配置 PyO3 使用的 Python 发行版（<a href="#configuring-the-python-version">见上文</a>）是否包含共享库或静态库，自动在这两种链接模式之间切换。静态库通常出现在从源码编译且未使用 <code>--enable-shared</code> 配置选项的 Python 发行版中。</p>
+<h3 id="动态嵌入-python-解释器"><a class="header" href="#动态嵌入-python-解释器">动态嵌入 Python 解释器</a></h3>
+<p>动态嵌入 Python 解释器比静态嵌入容易得多。这通过将你的程序链接到 Python 共享库（如 UNIX 上的 <code>libpython.3.9.so</code> 或 Windows 上的 <code>python39.dll</code>）来实现。Python 解释器的实现位于共享库中。这意味着当操作系统运行你的 Rust 程序时，也需要能够找到 Python 共享库。</p>
+<p>这种嵌入方式非常适合需要访问 Python 解释器的 Rust 测试。对于安装在 Python 虚拟环境（virtualenv）中的 Rust 软件也非常适用，因为虚拟环境会设置合适的环境变量以定位正确的 Python 共享库。</p>
+<p>若要将程序分发给非技术用户，你还需要考虑将 Python 共享库一并包含在发布包中，并设置包装脚本以设置正确的环境变量（如 UNIX 上的 <code>LD_LIBRARY_PATH</code> 或 Windows 上的 <code>PATH</code>）。</p>
+<p>请注意：PyPy 无法被嵌入到 Rust（或其他任何软件）中。对此的支持正在 <a href="https://github.com/pypy/pypy/issues/3836">PyPy 问题追踪器</a> 中跟踪。</p>
+<h3 id="静态嵌入-python-解释器"><a class="header" href="#静态嵌入-python-解释器">静态嵌入 Python 解释器</a></h3>
+<p>静态嵌入 Python 解释器意味着将 Python 静态库的内容直接包含在你的 Rust 二进制文件中。这意味着你在分发程序时只需要提供二进制文件：Python 解释器已经内嵌在二进制文件中！</p>
+<p>在 Windows 上几乎从不做静态链接，因此 Python 发行版通常不包含静态库。以下信息仅适用于 UNIX 系统。</p>
+<p>Python 静态库通常名为 <code>libpython.a</code>。静态链接存在许多复杂问题，如下所列。因此，PyO3 目前尚未对该嵌入模式提供一流支持。更多详情以及遇到问题时的讨论，请参见 <a href="https://github.com/PyO3/pyo3/issues/416">PyO3 GitHub 上的 issue 416</a>。</p>
+<p>当静态嵌入解释器时，<a href="features.html#auto-initialize"><code>auto-initialize</code></a> 功能会被刻意禁用，因为新用户在运行测试程序时常常会无意中执行静态链接。而使用动态嵌入方式尝试 PyO3 则要简单得多。</p>
+<p>已知的复杂问题包括：</p>
+<ul>
+<li>
+<p>为了导入已编译的扩展模块（例如其他用 Rust 或 C 编写的扩展模块），你的二进制文件在编译期间必须设置正确的链接器标志，以导出 <code>libpython.a</code> 的原始内容，供扩展模块使用（例如 <code>-Wl,--export-dynamic</code>）。</p>
+</li>
+<li>
+<p>创建 <code>libpython.a</code> 所使用的 C 编译器和编译标志必须与你的 Rust 编译器和标志兼容，否则会出现编译失败。</p>
+<p>明显不同的编译器版本可能会出现如下错误：</p>
+<pre><code class="language-text">lto1: fatal error: bytecode stream in file 'rust-numpy/target/release/deps/libpyo3-6a7fb2ed970dbf26.rlib' generated with LTO version 6.0 instead of the expected 6.2
+</code></pre>
+<p>标志不匹配可能导致如下错误：</p>
+<pre><code class="language-text">/usr/bin/ld: /usr/lib/gcc/x86_64-linux-gnu/9/../../../x86_64-linux-gnu/libpython3.9.a(zlibmodule.o): relocation R_X86_64_32 against `.data' can not be used when making a PIE object; recompile with -fPIE
+</code></pre>
+</li>
+</ul>
+<p>如果你在静态链接解释器时遇到上述或其他问题，请在 <a href="https://github.com/PyO3/pyo3/issues/416">PyO3 GitHub 的 issue 416</a> 中进行讨论。希望将来此讨论能积累足够的信息和解决方案，使得 PyO3 能够为静态嵌入提供一流支持。</p>
+<h3 id="在嵌入-python-解释器时导入你的模块"><a class="header" href="#在嵌入-python-解释器时导入你的模块">在嵌入 Python 解释器时导入你的模块</a></h3>
+<p>当你运行带有嵌入解释器的 Rust 二进制文件时，任何通过 <code>#[pymodule]</code> 创建的模块都无法直接被导入，除非在初始化嵌入解释器之前将其添加到一个名为 <code>PyImport_Inittab</code> 的表中。否则，嵌入解释器中的 Python 语句（如 <code>import your_new_module</code>）将失败。你可以在初始化 Python 解释器前调用宏 <a href="{{#PYO3_DOCS_URL}}/pyo3/macro.append_to_inittab.html"><code>append_to_inittab</code></a>，将你的模块加入该表。（Python 解释器会在调用 <code>Python::initialize</code>、<code>with_embedded_python_interpreter</code> 或在启用 <a href="features.html#auto-initialize"><code>auto-initialize</code></a> 功能时调用 <code>Python::attach</code> 时被初始化。）</p>
+<h2 id="交叉编译"><a class="header" href="#交叉编译">交叉编译</a></h2>
+<p>得益于 Rust 强大的交叉编译支持，使用 PyO3 进行交叉编译相对简单。开始前，你需要准备以下软件：</p>
+<ul>
+<li>目标平台的工具链。</li>
+<li>在 Cargo <code>.config</code> 中为你的目标平台和所用工具链配置合适的选项。</li>
+<li>已为目标平台编译好的 Python 解释器（构建 “abi3” 扩展模块时可选）。</li>
+<li>主机平台上的 Python 解释器，并通过 <code>PATH</code> 或设置 <a href="#configuring-the-python-version"><code>PYO3_PYTHON</code></a> 变量可访问（构建 “abi3” 扩展模块时可选）。</li>
+</ul>
+<p>完成上述准备后，你可以使用 Cargo 的 <code>--target</code> 标志来构建交叉编译的 PyO3 模块。PyO3 的构建脚本会根据你的主机和目标平台自动检测是否正在进行交叉编译。</p>
+<p>在交叉编译时，PyO3 的构建脚本无法运行目标平台的 Python 解释器来查询配置，因此你可能需要设置一些额外的环境变量：</p>
+<ul>
+<li><code>PYO3_CROSS</code>：存在时强制 PyO3 按交叉编译模式配置。</li>
+<li><code>PYO3_CROSS_LIB_DIR</code>：可设为包含目标平台 libpython 动态共享对象（DSO）及对应 <code>_sysconfigdata*.py</code> 文件（类 Unix 目标）或 Python DLL 导入库（Windows 目标）的目录。仅当输出二进制文件需要显式链接 libpython（例如目标为 Windows 和 Android 或嵌入 Python 解释器）或必须从 <code>_sysconfigdata*.py</code> 获取解释器配置时才需要设置该变量。</li>
+<li><code>PYO3_CROSS_PYTHON_VERSION</code>：目标 Python 安装的主版本和次版本（如 3.9）。仅当 PyO3 无法从 <code>abi3-py3*</code> 功能中确定目标版本，或未设置 <code>PYO3_CROSS_LIB_DIR</code>，或 <code>PYO3_CROSS_LIB_DIR</code> 中存在多个 Python 版本时，才需要设置该变量。</li>
+<li><code>PYO3_CROSS_PYTHON_IMPLEMENTATION</code>：目标 Python 安装的实现名称（“CPython” 或 “PyPy”）。默认假设为 CPython，除非未设置此变量且 PyO3 可通过 <code>_sysconfigdata*.py</code> 获取解释器配置（当为类 Unix 目标设置了 <code>PYO3_CROSS_LIB_DIR</code> 时）。</li>
+</ul>
+<p>一个实验性的 <code>pyo3</code> crate 功能 <code>generate-import-lib</code> 允许用户在不设置 <code>PYO3_CROSS_LIB_DIR</code> 环境变量或提供任何 Windows Python 库文件的情况下，交叉编译 Windows 平台的扩展模块。它通过外部的 <a href="https://docs.rs/python3-dll-a/latest/python3_dll_a/"><code>python3-dll-a</code></a> crate 为 MinGW-w64 和 MSVC 编译目标生成 Python DLL 的导入库。<code>python3-dll-a</code> 使用 binutils 的 <code>dlltool</code> 程序为 MinGW-w64 目标生成 DLL 导入库。可以通过设置 <code>PYO3_MINGW_DLLTOOL</code> 环境变量，覆盖交叉目标的默认 <code>dlltool</code> 命令名。<em>注意</em>：MSVC 目标要求主机系统上安装有 LLVM binutils 或 MSVC 构建工具。更具体地说，当目标为 <code>*-pc-windows-msvc</code> 时，<code>python3-dll-a</code> 要求 <code>llvm-dlltool</code> 或 <code>lib.exe</code> 可执行文件在 <code>PATH</code> 中。若设置了 <code>ZIG_COMMAND</code> 环境变量指向已安装的 Zig 程序（如 <code>"zig"</code> 或 <code>"python -m ziglang"</code>），则可使用 Zig 编译器替代 <code>llvm-dlltool</code>。</p>
+<p>一个示例可能如下（假设目标 sysroot 位于 <code>/home/pyo3/cross/sysroot</code>，目标为 <code>armv7</code>）：</p>
+<pre><code class="language-sh">export PYO3_CROSS_LIB_DIR="/home/pyo3/cross/sysroot/usr/lib"
+
+cargo build --target armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>如果交叉库目录中存在多个 Python 版本，且无法设置更精确的位置来同时包含 <code>libpython</code> DSO 和 <code>_sysconfigdata*.py</code> 文件，可以显式指定所需版本：</p>
+<pre><code class="language-sh">export PYO3_CROSS_PYTHON_VERSION=3.8
+export PYO3_CROSS_LIB_DIR="/home/pyo3/cross/sysroot/usr/lib"
+
+cargo build --target armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>另一个使用相同 sysroot 但构建 Windows 目标的例子：</p>
+<pre><code class="language-sh">export PYO3_CROSS_PYTHON_VERSION=3.9
+export PYO3_CROSS_LIB_DIR="/home/pyo3/cross/sysroot/usr/lib"
+
+cargo build --target x86_64-pc-windows-gnu
+</code></pre>
+<p>在上述示例中，也可以启用任意 <code>abi3-py3*</code> 功能来替代设置 <code>PYO3_CROSS_PYTHON_VERSION</code>。</p>
+<p>在为 Unix 和 macOS 目标交叉编译扩展模块时，或在为 Windows 交叉编译扩展模块且启用了实验性 crate 功能 <code>generate-import-lib</code> 时，通常可以省略 <code>PYO3_CROSS_LIB_DIR</code>。</p>
+<p>以下资源对交叉编译也可能有帮助：</p>
+<ul>
+<li><a href="https://github.com/japaric/rust-cross">github.com/japaric/rust-cross</a> 是 Rust 交叉编译入门指南。</li>
+<li><a href="https://github.com/rust-embedded/cross">github.com/rust-embedded/cross</a> 使用 Docker 简化 Rust 交叉编译流程。</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="advanced.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="building-and-distribution/multiple-python-versions.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="advanced.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="building-and-distribution/multiple-python-versions.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/tabs-6977231d.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

@@ -1,0 +1,2060 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>附录 A：迁移指南 - PyO3 user guide</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="PyO3 user guide">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="favicon-de23e50b.svg">
+        <link rel="shortcut icon" href="favicon-8114d1fc.png">
+        <link rel="stylesheet" href="css/variables-8adf115d.css">
+        <link rel="stylesheet" href="css/general-2459343d.css">
+        <link rel="stylesheet" href="css/chrome-ae938929.css">
+        <link rel="stylesheet" href="css/print-9e4910d8.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="fonts/fonts-9644e21d.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="mdbook-highlight-css" href="highlight-493f70e1.css">
+        <link rel="stylesheet" id="mdbook-tomorrow-night-css" href="tomorrow-night-4c0ae647.css">
+        <link rel="stylesheet" id="mdbook-ayu-highlight-css" href="ayu-highlight-3fdfc3ac.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="theme/tabs-52f01167.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex-78070eb0.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="toc-c528a6fa.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="mdbook-body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="mdbook-sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("mdbook-sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="mdbook-sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="toc.html"></iframe>
+            </noscript>
+            <div id="mdbook-sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="mdbook-page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="mdbook-menu-bar-hover-placeholder"></div>
+                <div id="mdbook-menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="mdbook-sidebar-toggle" class="icon-button" for="mdbook-sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="mdbook-sidebar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M0 96C0 78.3 14.3 64 32 64H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32C14.3 128 0 113.7 0 96zM0 256c0-17.7 14.3-32 32-32H416c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32zM448 416c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32H416c17.7 0 32 14.3 32 32z"/></svg></span>
+                        </label>
+                        <button id="mdbook-theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="mdbook-theme-list">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M371.3 367.1c27.3-3.9 51.9-19.4 67.2-42.9L600.2 74.1c12.6-19.5 9.4-45.3-7.6-61.2S549.7-4.4 531.1 9.6L294.4 187.2c-24 18-38.2 46.1-38.4 76.1L371.3 367.1zm-19.6 25.4l-116-104.4C175.9 290.3 128 339.6 128 400c0 3.9 .2 7.8 .6 11.6c1.8 17.5-10.2 36.4-27.8 36.4H96c-17.7 0-32 14.3-32 32s14.3 32 32 32H240c61.9 0 112-50.1 112-112c0-2.5-.1-5-.2-7.5z"/></svg></span>
+                        </button>
+                        <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-ayu">Ayu</button></li>
+                        </ul>
+                        <button id="mdbook-search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="mdbook-searchbar">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352c79.5 0 144-64.5 144-144s-64.5-144-144-144S64 128.5 64 208s64.5 144 144 144z"/></svg></span>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">PyO3 user guide</h1>
+
+                    <div class="right-buttons">
+                        <a href="print.html" title="Print this book" aria-label="Print this book">
+                            <span class=fa-svg id="print-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M128 0C92.7 0 64 28.7 64 64v96h64V64H354.7L384 93.3V160h64V93.3c0-17-6.7-33.3-18.7-45.3L400 18.7C388 6.7 371.7 0 354.7 0H128zM384 352v32 64H128V384 368 352H384zm64 32h32c17.7 0 32-14.3 32-32V256c0-35.3-28.7-64-64-64H64c-35.3 0-64 28.7-64 64v96c0 17.7 14.3 32 32 32H64v64c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V384zm-16-88c-13.3 0-24-10.7-24-24s10.7-24 24-24s24 10.7 24 24s-10.7 24-24 24z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/tree/main/guide" title="Git repository" aria-label="Git repository">
+                            <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg></span>
+                        </a>
+                        <a href="https://github.com/PyO3/pyo3/edit/main/guide/src/migration.md" title="Suggest an edit" aria-label="Suggest an edit" rel="edit">
+                            <span class=fa-svg id="git-edit-button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M421.7 220.3l-11.3 11.3-22.6 22.6-205 205c-6.6 6.6-14.8 11.5-23.8 14.1L30.8 511c-8.4 2.5-17.5 .2-23.7-6.1S-1.5 489.7 1 481.2L38.7 353.1c2.6-9 7.5-17.2 14.1-23.8l205-205 22.6-22.6 11.3-11.3 33.9 33.9 62.1 62.1 33.9 33.9zM96 353.9l-9.3 9.3c-.9 .9-1.6 2.1-2 3.4l-25.3 86 86-25.3c1.3-.4 2.5-1.1 3.4-2l9.3-9.3H112c-8.8 0-16-7.2-16-16V353.9zM453.3 19.3l39.4 39.4c25 25 25 65.5 0 90.5l-14.5 14.5-22.6 22.6-11.3 11.3-33.9-33.9-62.1-62.1L314.3 67.7l11.3-11.3 22.6-22.6 14.5-14.5c25-25 65.5-25 90.5 0z"/></svg></span>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="mdbook-search-wrapper" class="hidden">
+                    <form id="mdbook-searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="mdbook-searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="mdbook-searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <span class=fa-svg id="fa-spin"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M304 48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zm0 416c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM48 304c26.5 0 48-21.5 48-48s-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48zm464-48c0-26.5-21.5-48-48-48s-48 21.5-48 48s21.5 48 48 48s48-21.5 48-48zM142.9 437c18.7-18.7 18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zm0-294.2c18.7-18.7 18.7-49.1 0-67.9S93.7 56.2 75 75s-18.7 49.1 0 67.9s49.1 18.7 67.9 0zM369.1 437c18.7 18.7 49.1 18.7 67.9 0s18.7-49.1 0-67.9s-49.1-18.7-67.9 0s-18.7 49.1 0 67.9z"/></svg></span>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="mdbook-searchresults-outer" class="searchresults-outer hidden">
+                        <div id="mdbook-searchresults-header" class="searchresults-header"></div>
+                        <ul id="mdbook-searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('mdbook-sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('mdbook-sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#mdbook-sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="mdbook-content" class="content">
+                    <main>
+                        <h1 id="从旧版本-pyo3-迁移"><a class="header" href="#从旧版本-pyo3-迁移">从旧版本 PyO3 迁移</a></h1>
+<p>本指南可帮助您将代码从一个 PyO3 版本升级到下一个版本，以应对破坏性变更。<br>关于所有变更的详细列表，请参阅 <a href="changelog.html">变更日志</a>。</p>
+<h2 id="从-026-到-027"><a class="header" href="#从-026-到-027">从 0.26.* 到 0.27</a></h2>
+<h3 id="frompyobject-重构以提升灵活性和效率"><a class="header" href="#frompyobject-重构以提升灵活性和效率"><code>FromPyObject</code> 重构以提升灵活性和效率</a></h3>
+<details open="">
+<summary><small>点击展开</small></summary>
+<p>随着 PyO3 0.23 中移除了 <code>gil-ref</code> API，现在可以完全分离 Python 生命周期 <code>'py</code> 和输入生命周期 <code>'a</code>。这允许从输入数据中借用，而不会将生命周期延长至与解释器绑定。</p>
+<p><code>FromPyObject</code> 现在接受一个额外的生命周期参数 <code>'a</code>，用于描述输入数据的生命周期。<code>extract</code> 方法的参数类型从 <code>&amp;Bound&lt;'py, PyAny&gt;</code> 变更为 <code>Borrowed&lt;'a, 'py, PyAny&gt;</code>。这是因为 <code>&amp;'a Bound&lt;'py, PyAny&gt;</code> 会由于引用类型导致隐式约束 <code>'py: 'a</code>。</p>
+<p>这种新形式早在 0.22 版本中就已通过内部的 <code>FromPyObjectBound</code> trait 部分实现，现在已扩展至所有类型。</p>
+<p>大多数实现只需添加一个省略的生命周期即可完成迁移。</p>
+<p>此外，<code>FromPyObject</code> 新增了一个关联类型 <code>Error</code>，用于表示转换失败时的错误类型。在迁移过程中使用 <code>PyErr</code> 是一个不错的默认选择，后续可引入自定义错误类型以避免不必要的 Python 异常对象创建，并提升类型安全性。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore">impl&lt;'py&gt; FromPyObject&lt;'py&gt; for IpAddr {
+    fn extract_bound(obj: &amp;Bound&lt;'py, PyAny&gt;) -&gt; PyResult&lt;Self&gt; {
+        ...
+    }
+}</code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust ignore">impl&lt;'py&gt; FromPyObject&lt;'_, 'py&gt; for IpAddr {
+    type Error = PyErr;
+
+    fn extract(obj: Borrowed&lt;'_, 'py, PyAny&gt;) -&gt; Result&lt;Self, Self::Error&gt; {
+        ...
+        // 由于 `Borrowed` 实现了 `Deref` 到 `&amp;Bound`，函数体通常无需修改，
+        // 或仅需偶尔添加 `&amp;`
+    }
+}</code></pre>
+<p>在某些情况下，可能需要更多步骤。对于泛型类型，需要调整约束条件，具体约束取决于类型的使用方式。</p>
+<p>对于简单的包装类型，通常可以直接转发约束。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore">struct MyWrapper&lt;T&gt;(T);
+
+impl&lt;'py, T&gt; FromPyObject&lt;'py&gt; for MyWrapper&lt;T&gt;
+where
+    T: FromPyObject&lt;'py&gt;
+{
+    fn extract_bound(obj: &amp;Bound&lt;'py, PyAny&gt;) -&gt; PyResult&lt;Self&gt; {
+        ob.extract().map(MyWrapper)
+    }
+}</code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[allow(dead_code)]
+</span><span class="boring">pub struct MyWrapper&lt;T&gt;(T);
+</span>impl&lt;'a, 'py, T&gt; FromPyObject&lt;'a, 'py&gt; for MyWrapper&lt;T&gt;
+where
+    T: FromPyObject&lt;'a, 'py&gt;
+{
+    type Error = T::Error;
+
+    fn extract(obj: Borrowed&lt;'a, 'py, PyAny&gt;) -&gt; Result&lt;Self, Self::Error&gt; {
+        obj.extract().map(MyWrapper)
+    }
+}</code></pre>
+<p>对于在提取过程中需要创建临时 Python 引用的容器类型（例如从 <code>PyList</code> 提取），需要更强的约束。为此引入了 <code>FromPyObjectOwned</code> trait。对于任何实现了 <code>FromPyObject</code> 且未从输入借用的类型，都会自动实现该 trait。建议在这些场景下将其用作 trait bound。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore">struct MyVec&lt;T&gt;(Vec&lt;T&gt;);
+impl&lt;'py, T&gt; FromPyObject&lt;'py&gt; for Vec&lt;T&gt;
+where
+    T: FromPyObject&lt;'py&gt;,
+{
+    fn extract_bound(obj: &amp;Bound&lt;'py, PyAny&gt;) -&gt; PyResult&lt;Self&gt; {
+        let mut v = MyVec(Vec::new());
+        for item in obj.try_iter()? {
+            v.0.push(item?.extract::&lt;T&gt;()?);
+        }
+        Ok(v)
+    }
+}</code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[allow(dead_code)]
+</span><span class="boring">pub struct MyVec&lt;T&gt;(Vec&lt;T&gt;);
+</span>impl&lt;'py, T&gt; FromPyObject&lt;'_, 'py&gt; for MyVec&lt;T&gt;
+where
+    T: FromPyObjectOwned&lt;'py&gt; // 👈 只能提取拥有所有权的值，因为下面每个 `item`
+                              //    都是临时的、生命周期短暂的拥有权引用
+{
+    type Error = PyErr;
+
+    fn extract(obj: Borrowed&lt;'_, 'py, PyAny&gt;) -&gt; Result&lt;Self, Self::Error&gt; {
+        let mut v = MyVec(Vec::new());
+        for item in obj.try_iter()? {
+            v.0.push(item?.extract::&lt;T&gt;().map_err(Into::into)?); // 需要 `map_err`，因为 `?` 使用 `From` 而非 `Into` 🙁
+        }
+        Ok(v)
+    }
+}</code></pre>
+<p>这与 <code>serde</code> 的 <a href="https://docs.rs/serde/latest/serde/trait.Deserialize.html"><code>Deserialize</code></a> 和 <a href="https://docs.rs/serde/latest/serde/de/trait.DeserializeOwned.html"><code>DeserializeOwned</code></a> trait 非常相似，详见 <a href="https://serde.rs/lifetimes.html">此处</a>。</p>
+</details>
+<h2 id="downcast-和-downcasterror-替换为-cast-和-casterror"><a class="header" href="#downcast-和-downcasterror-替换为-cast-和-casterror"><code>.downcast()</code> 和 <code>DowncastError</code> 替换为 <code>.cast()</code> 和 <code>CastError</code></a></h2>
+<p><code>.downcast()</code> 系列函数原本仅在 <code>Bound&lt;PyAny&gt;</code> 上可用。在某些边缘情况（特别是与 <code>.downcast_into()</code> 相关）下，这需要使用 <code>.as_any().downcast()</code> 或 <code>.into_any().downcast_into()</code> 链式调用。此外，<code>DowncastError</code> 生成的 Python 异常消息由于使用了 Rust 类型名称而不够“Pythonic”。</p>
+<p><code>.cast()</code> 系列函数现在可在所有 <code>Bound</code> 和 <code>Borrowed</code> 智能指针上使用（无论其类型），并且其错误消息在运行时由实际类型动态生成。这为 PyO3 模块的作者和使用者带来了更友好的体验。</p>
+<p>迁移方法：将 <code>.downcast()</code> 替换为 <code>.cast()</code>，将 <code>DowncastError</code> 替换为 <code>CastError</code>（类似地，<code>.downcast_into()</code> 替换为 <code>.cast_into()</code>，<code>DowncastIntoError</code> 替换为 <code>CastIntoError</code> 等）。</p>
+<p><code>CastError</code> 需要一个 Python <code>type</code> 对象（或其他与 <code>isinstance()</code> 兼容的“类信息”对象）作为第二个参数，因此在极少数手动构造 <code>DowncastError</code> 的情况下，代码可能需要少量调整。</p>
+<h2 id="pytypecheck-现在是一个-unsafe-trait"><a class="header" href="#pytypecheck-现在是一个-unsafe-trait"><code>PyTypeCheck</code> 现在是一个 <code>unsafe trait</code></a></h2>
+<p>由于 <code>PyTypeCheck</code> 是用于保护 <code>.cast()</code> 函数以将 Python 对象视为特定具体类型的 trait，因此其实现是 <code>unsafe</code> 的。</p>
+<p>这本应从一开始就是这样，此前在初始实现中遗漏了这一点，此次发布中已予以纠正。</p>
+<h2 id="从-025-到-026"><a class="header" href="#从-025-到-026">从 0.25.* 到 0.26</a></h2>
+<h3 id="重命名-pythonwith_gilpythonallow_threads-和-pyo3prepare_freethreaded_python"><a class="header" href="#重命名-pythonwith_gilpythonallow_threads-和-pyo3prepare_freethreaded_python">重命名 <code>Python::with_gil</code>、<code>Python::allow_threads</code> 和 <code>pyo3::prepare_freethreaded_python</code></a></h3>
+<details open="">
+<summary><small>点击展开</small></summary>
+<p>这些 API 的名称是在全局解释器锁（GIL）强制启用的背景下创建的。随着 Python 3.13 中自由线程的引入，这种情况已不复存在，这些命名不再具有普遍意义。<br>因此，我们选择将其重命名为自由线程引入的更现代术语：</p>
+<ul>
+<li><code>Python::with_gil</code> 现在称为 <code>Python::attach</code>，它将 Python 线程状态附加到当前线程。在启用 GIL 的构建中，只有一个线程能附加到解释器；在自由线程模式下可以有多个。</li>
+<li><code>Python::allow_threads</code> 现在称为 <code>Python::detach</code>，它分离之前附加的线程状态。</li>
+<li><code>pyo3::prepare_freethreaded_python</code> 现在称为 <code>Python::initialize</code>。</li>
+</ul>
+</details>
+<h3 id="弃用-pyobject-类型别名"><a class="header" href="#弃用-pyobject-类型别名">弃用 <code>PyObject</code> 类型别名</a></h3>
+<details open="">
+<summary><small>点击展开</small></summary>
+<p>类型别名 <code>PyObject</code>（即 <code>Py&lt;PyAny&gt;</code>）经常与同名的 FFI 定义 <code>pyo3::ffi::PyObject</code> 混淆。因此我们决定弃用其使用。迁移时只需将其替换为目标类型 <code>Py&lt;PyAny&gt;</code> 即可。</p>
+</details>
+<h3 id="使用-pyoncelock-替代-giloncecell"><a class="header" href="#使用-pyoncelock-替代-giloncecell">使用 <code>PyOnceLock</code> 替代 <code>GILOnceCell</code></a></h3>
+<details open="">
+<summary><small>点击展开</small></summary>
+<p>类似于上述对 <code>Python::with_gil</code> 及相关 API 的重命名，<code>GILOnceCell</code> 类型最初是为受 GIL 限制的 Python 解释器设计的。除名称外，它允许“一次性”初始化发生竞争，因为这种竞争由 GIL 协调，在实际中极不可能出现问题。</p>
+<p>随着自由线程 Python 的引入，竞争性初始化行为更有可能引发问题。因此引入了新的类型 <code>PyOnceLock</code>，它能在正确附加到 Python 解释器的同时，确保真正的单次初始化。它暴露的 API 与 <code>GILOnceCell</code> 相同，因此通常是直接替换。但值得注意的是，如果此前意外依赖了 <code>GILOnceCell</code> 的竞争初始化行为（例如由于循环引用），那么 <code>PyOnceLock</code> 更强的“仅一次”保证可能导致死锁，需要重构代码。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::sync::GILOnceCell;
+</span><span class="boring">use pyo3::types::PyType;
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">Python::attach(|py| {
+</span>static DECIMAL_TYPE: GILOnceCell&lt;Py&lt;PyType&gt;&gt; = GILOnceCell::new();
+DECIMAL_TYPE.import(py, "decimal", "Decimal")?;
+<span class="boring">Ok(())
+</span><span class="boring">})
+</span><span class="boring">}</span></code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::sync::PyOnceLock;
+</span><span class="boring">use pyo3::types::PyType;
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span><span class="boring">Python::attach(|py| {
+</span>static DECIMAL_TYPE: PyOnceLock&lt;Py&lt;PyType&gt;&gt; = PyOnceLock::new();
+DECIMAL_TYPE.import(py, "decimal", "Decimal")?;
+<span class="boring">Ok(())
+</span><span class="boring">})
+</span><span class="boring">}</span></code></pre>
+</details>
+<h3 id="弃用-gilprotected"><a class="header" href="#弃用-gilprotected">弃用 <code>GILProtected</code></a></h3>
+<details open="">
+<summary><small>点击展开</small></summary>
+<p>作为与 GIL 限制的 Python 设计的并发原语相关的另一项清理工作，<code>GILProtected</code> 类型现已被弃用。建议使用与自由线程 Python 兼容的并发原语，如 <a href="https://doc.rust-lang.org/std/sync/struct.Mutex.html"><code>std::sync::Mutex</code></a>（结合 PyO3 的 <a href="{{#PYO3_DOCS_URL}}/pyo3/sync/trait.MutexExt.html"><code>MutexExt</code></a> trait）。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">fn main() {
+</span><span class="boring">#[cfg(not(Py_GIL_DISABLED))] {
+</span>use pyo3::sync::GILProtected;
+use std::cell::RefCell;
+<span class="boring">Python::attach(|py| {
+</span>static NUMBERS: GILProtected&lt;RefCell&lt;Vec&lt;i32&gt;&gt;&gt; = GILProtected::new(RefCell::new(Vec::new()));
+Python::attach(|py| {
+    NUMBERS.get(py).borrow_mut().push(42);
+});
+<span class="boring">})
+</span><span class="boring">}
+</span><span class="boring">}</span></code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span>use pyo3::sync::MutexExt;
+use std::sync::Mutex;
+<span class="boring">fn main() {
+</span><span class="boring">Python::attach(|py| {
+</span>static NUMBERS: Mutex&lt;Vec&lt;i32&gt;&gt; = Mutex::new(Vec::new());
+Python::attach(|py| {
+    NUMBERS.lock_py_attached(py).expect("no poisoning").push(42);
+});
+<span class="boring">})
+</span><span class="boring">}
+</span>```&lt;/details&gt;
+
+## `PyMemoryError` 现在在转换为 `io::Error` 时映射到 `io::ErrorKind::OutOfMemory`
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+此前，将 `PyMemoryError` 转换为 Rust 的 `io::Error` 时，错误类型（kind）为 `Other`。现在，它会生成类型为 `OutOfMemory` 的错误。  
+类似地，将类型为 `OutOfMemory` 的 `io::Error` 转换回 Python 错误时，此前会得到一个通用的 `PyOSError`，而现在则会得到 `PyMemoryError`。
+
+这一更改使错误转换更加精确，并在 Python 和 Rust 之间统一了内存耗尽错误的语义。
+&lt;/details&gt;
+
+# 从 0.24.* 升级到 0.25
+
+## `AsPyPointer` 的移除
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+`AsPyPointer` trait 主要是已被移除的 gil-refs API 的遗留产物。最后剩余的用途是 GC API（即 `PyVisit::call`）以及对象身份比较（`PyAnyMethods::is` 和 `Py::is`）。
+
+`PyVisit::call` 已更新为接受 `T: Into&lt;Option&lt;&amp;Py&lt;T&gt;&gt;&gt;`，这使得可以传入类型为 `&amp;Py&lt;T&gt;`、`&amp;Option&lt;Py&lt;T&gt;&gt;` 或 `Option&lt;&amp;Py&lt;T&gt;&gt;` 的参数。迁移时通常无需修改代码。
+
+`PyAnyMethods::is` / `Py::is` 已更新为接受 `T: AsRef&lt;Py&lt;PyAny&gt;&gt;`。此外，还为 `Py`、`Bound` 和 `Borrowed` 添加了 `AsRef&lt;Py&lt;PyAny&gt;&gt;` 的实现。由于已存在 `AsRef&lt;Bound&lt;PyAny&gt;&gt; for Bound&lt;T&gt;` 的实现，这可能会在非泛型代码中引起类型推断问题。可以通过将这些调用中的 `as_ref` 替换为 `as_any` 来轻松完成迁移。
+&lt;/details&gt;
+
+# 从 0.23.* 升级到 0.24
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+从 0.23 到 0.24 没有需要在此指南中特别记录的重大变更。
+&lt;/details&gt;
+
+# 从 0.22.* 升级到 0.23
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+PyO3 0.23 对内部实现进行了重大重构，带来两个主要改进：
+
+- 支持 Python 3.13 的新自由线程构建版本（又称 "3.13t"）
+- 使用新的 `IntoPyObject` trait 重构到 Python 的类型转换
+
+这两项变更都较为重要，我们已尽力确保尽可能多的现有代码无需修改即可继续运行。升级时可能在以下三个方面感受到影响：
+
+- PyO3 的数据结构 [现在是线程安全的](#free-threaded-python-support)，不再依赖 GIL 进行同步。特别是，`#[pyclass]` 类型 [现在必须实现 `Sync`](./class/thread-safety.md)。
+- 您代码库中的某些类型可能需要实现 [`IntoPyObject` trait](#new-intopyobject-trait-unifies-to-python-conversions)。大多数情况下，可以直接使用 [`#[derive(IntoPyObject)]`](#intopyobject-and-intopyobjectref-derive-macros) 宏。由于 `IntoPy` 和 `ToPyObject` trait 被替换，会触发大量弃用警告。
+- [最终移除了 `gil-refs` 功能](#gil-refs-feature-removed) 也会导致大量弃用警告，但这为 PyO3 的 "Bound" API 清理和简化腾出了空间。
+
+下文将更深入地讨论每项变更的原理和细节。
+&lt;/details&gt;
+
+## 自由线程 Python 支持
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+PyO3 0.23 引入了对 CPython 3.13 新的自由线程构建版本（又称 "3.13t"）的初步支持。
+
+由于该构建允许多个 Python 线程同时操作底层 Rust 数据，`#[pyclass]` 宏现在要求其作用的类型实现 `Sync`。
+
+除了 `#[pyclass]` 的这一变更外，PyO3 的大多数功能仍保持不变，因为变更主要集中在使内部数据结构线程安全。例如 `GILOnceCell` 类型，过去依赖 GIL 来保证单次初始化的同步性，现在改用内部锁来确保仅一次写入成功，但它允许初始化闭包的多次竞争执行。更推荐的做法是使用 `std::sync::OnceLock` 搭配 `pyo3::sync::OnceLockExt` trait，该 trait 提供了 `OnceLock::get_or_init_py_attached`，可保证初始化闭包只执行一次且不会与 GIL 死锁。
+
+未来版本的 PyO3 很可能会添加更多 trait 和数据结构，以简化自由线程 Python 的使用。
+
+以下功能在自由线程构建中不可用：
+
+- `GILProtected` 类型，它依赖 GIL 来实现内部内容的同步访问
+- `PyList::get_item_unchecked`，由于检查时与使用时之间存在竞争，无法安全使用
+
+如果您的代码使用了这些功能，则需要处理它们在自由线程构建下的不可用性。一种方法是通过条件编译——扩展可以使用 `pyo3-build-config` 来获取 `#[cfg(Py_GIL_DISABLED)]` 守护条件。
+
+详情请参见[关于自由线程 Python 的指南章节](free-threading.md)，了解如何在您的 PyO3 扩展中支持自由线程 Python。
+&lt;/details&gt;
+
+## 新的 `IntoPyObject` trait 统一了到 Python 的转换
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+PyO3 0.23 引入了一个新的 `IntoPyObject` trait，用于将 Rust 类型转换为 Python 对象，取代了原有的 `IntoPy` 和 `ToPyObject` trait。该新 trait 的主要特性包括：
+
+- 转换现在可以返回错误
+- 它被设计为对 `T`（值类型）和 `&amp;T`（引用类型）都能高效工作
+- 相比 `IntoPy&lt;T&gt;`，泛型 `T` 被移至关联类型，因此：
+  - 现在转换某个类型只有一种方式
+  - 输出类型更精确，可返回任意 Python 类型而不仅限于 `PyAny`
+- 字节集合现在专门转换为 `PyBytes`，详见[下文](#to-python-conversions-changed-for-byte-collections-vecu8-u8-n-and-smallvecu8-n)
+- `()`（单元类型）现在仅在 `#[pyfunction]` 和 `#[pymethods]` 的返回位置被特化为返回 `None`；在普通使用中，它会转换为一个空的 `PyTuple`
+
+所有 PyO3 内置类型以及 `#[pyclass]` 类型都已实现了 `IntoPyObject`。其他类型需要适配 `IntoPyObject` 的实现，以保持与 Python API 的兼容性。在许多情况下，可以使用新的 [`#[derive(IntoPyObject)]`](#intopyobject-and-intopyobjectref-derive-macros) 宏代替[手动实现](#intopyobject-manual-implementation)。
+
+由于 `IntoPyObject::into_pyobject` 可能返回 `Bound` 或 `Borrowed`，您可能会发现 [`BoundObject`](conversions/traits.md#boundobject-for-conversions-that-may-be-bound-or-borrowed) trait 有助于编写能通用处理这两种智能指针的代码。
+
+随着 `IntoPyObject` 的引入，旧的转换 trait `ToPyObject` 和 `IntoPy` 已被弃用，将在未来的 PyO3 版本中移除。
+
+### `IntoPyObject` 和 `IntoPyObjectRef` 派生宏
+
+要实现该新 trait，可使用如下新的 `IntoPyObject` 和 `IntoPyObjectRef` 派生宏：
+
+```rust,no_run
+<span class="boring">use pyo3::prelude::*;
+</span>#[derive(IntoPyObject, IntoPyObjectRef)]
+struct Struct {
+    count: usize,
+    obj: Py&lt;PyAny&gt;,
+}</code></pre>
+<p><code>IntoPyObjectRef</code> 派生宏为引用类型（如上例中的 <code>&amp;Struct</code>）生成实现，以替代 <code>ToPyObject</code> trait。</p>
+<h4 id="intopyobject-手动实现"><a class="header" href="#intopyobject-手动实现"><code>IntoPyObject</code> 手动实现</a></h4>
+<p>此前：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[allow(dead_code)]
+</span>struct MyPyObjectWrapper(PyObject);
+
+impl IntoPy&lt;PyObject&gt; for MyPyObjectWrapper {
+    fn into_py(self, py: Python&lt;'_&gt;) -&gt; PyObject {
+        self.0
+    }
+}
+
+impl ToPyObject for MyPyObjectWrapper {
+    fn to_object(&amp;self, py: Python&lt;'_&gt;) -&gt; PyObject {
+        self.0.clone_ref(py)
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[allow(dead_code)]
+</span><span class="boring">struct MyPyObjectWrapper(PyObject);
+</span>
+impl&lt;'py&gt; IntoPyObject&lt;'py&gt; for MyPyObjectWrapper {
+    type Target = PyAny; // Python 类型
+    type Output = Bound&lt;'py, Self::Target&gt;; // 多数情况下为 `Bound`
+    type Error = std::convert::Infallible;
+
+    fn into_pyobject(self, py: Python&lt;'py&gt;) -&gt; Result&lt;Self::Output, Self::Error&gt; {
+        Ok(self.0.into_bound(py))
+    }
+}
+
+// `ToPyObject` 的实现应转换为引用类型的实现
+impl&lt;'a, 'py&gt; IntoPyObject&lt;'py&gt; for &amp;'a MyPyObjectWrapper {
+    type Target = PyAny;
+    type Output = Borrowed&lt;'a, 'py, Self::Target&gt;; // `Borrowed` 可用于优化引用计数
+    type Error = std::convert::Infallible;
+
+    fn into_pyobject(self, py: Python&lt;'py&gt;) -&gt; Result&lt;Self::Output, Self::Error&gt; {
+        Ok(self.0.bind_borrowed(py))
+    }
+}</code></pre>
+</details>
+<h3 id="字节集合的到-python-转换变更vecu8u8-n-和-smallvecu8-n"><a class="header" href="#字节集合的到-python-转换变更vecu8u8-n-和-smallvecu8-n">字节集合的到 Python 转换变更（<code>Vec&lt;u8&gt;</code>、<code>[u8; N]</code> 和 <code>SmallVec&lt;[u8; N]&gt;</code>）</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>随着 <code>IntoPyObject</code> trait 的引入，PyO3 的宏在生成 Python 值时现在优先使用 <code>IntoPyObject</code> 实现，而非 <code>IntoPy&lt;PyObject&gt;</code>。这适用于 <code>#[pyfunction]</code> 和 <code>#[pymethods]</code> 的返回值，以及通过 <code>#[pyo3(get)]</code> 访问的字段。</p>
+<p>这一变更影响返回以下_字节_集合的函数和方法：</p>
+<ul>
+<li><code>Vec&lt;u8&gt;</code></li>
+<li><code>[u8; N]</code></li>
+<li><code>SmallVec&lt;[u8; N]&gt;</code></li>
+</ul>
+<p>在新的 <code>IntoPyObject</code> 实现中，它们现在将转换为 <code>PyBytes</code> 而非 <code>PyList</code>。所有其他 <code>T</code> 类型不受影响，仍转换为 <code>PyList</code>。</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>#[pyfunction]
+fn foo() -&gt; Vec&lt;u8&gt; { // 此前转换为 `PyList`，现在转换为 `PyBytes`
+    vec![0, 1, 2, 3]
+}
+
+#[pyfunction]
+fn bar() -&gt; Vec&lt;u16&gt; { // 不受影响，返回 `PyList`
+    vec![0, 1, 2, 3]
+}</code></pre>
+<p>如果不需要此转换行为，可考虑使用 <code>PyList::new</code> 手动构造列表。</p>
+<p>以下类型此前仅对 <code>u8</code> 实现，现在允许其他 <code>T</code> 转换为 <code>PyList</code>：</p>
+<ul>
+<li><code>&amp;[T]</code></li>
+<li><code>Cow&lt;[T]&gt;</code></li>
+</ul>
+</details>这纯粹是额外的，仅用于扩展可能的返回类型。
+
+<h3 id="移除-gil-refs-功能"><a class="header" href="#移除-gil-refs-功能">移除 <code>gil-refs</code> 功能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 0.23 完成了对“GIL Refs”API 的移除，转而使用在 PyO3 0.21 中引入的新的“Bound”API。</p>
+<p>随着旧 API 的移除，许多之前带有 <code>_bound</code> 后缀引入的“Bound”API 方法不再需要这些后缀，因为这些名称已被释放。例如，<code>PyTuple::new_bound</code> 现在仅为 <code>PyTuple::new</code>（现有名称仍然保留但已弃用）。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::PyTuple;
+</span><span class="boring">fn main() {
+</span><span class="boring">Python::attach(|py| {
+</span>// 例如，PyTuple。许多此类 API 已更改。
+let tup = PyTuple::new_bound(py, [1, 2, 3]);
+<span class="boring">})
+</span><span class="boring">}</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::PyTuple;
+</span><span class="boring">fn main() {
+</span><span class="boring">Python::attach(|py| {
+</span>// 例如，PyTuple。许多此类 API 已更改。
+let tup = PyTuple::new(py, [1, 2, 3]);
+<span class="boring">})
+</span><span class="boring">}</span></code></pre>
+<h4 id="intopydict-trait-调整以移除-gil-refs"><a class="header" href="#intopydict-trait-调整以移除-gil-refs"><code>IntoPyDict</code> trait 调整以移除 <code>gil-refs</code></a></h4>
+<p>作为此 API 简化的一部分，<code>IntoPyDict</code> trait 经历了一个小的破坏性变更：<code>IntoPyDict::into_py_dict_bound</code> 方法已重命名为 <code>IntoPyDict::into_py_dict</code>。同时，它现在也是可失败的，这是 <code>IntoPyObject</code> trait 添加带来的变化。</p>
+<p>如果你曾为你自己的类型实现 <code>IntoPyDict</code>，你应该实现 <code>into_py_dict</code> 而不是 <code>into_py_dict_bound</code>。旧名称仍然可以调用但已弃用。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyDict, IntoPyDict};
+</span><span class="boring">use std::collections::HashMap;
+</span>
+
+struct MyMap&lt;K, V&gt;(HashMap&lt;K, V&gt;);
+
+
+impl&lt;K, V&gt; IntoPyDict for MyMap&lt;K, V&gt;
+where
+    K: ToPyObject,
+    V: ToPyObject,
+{
+    fn into_py_dict_bound(self, py: Python&lt;'_&gt;) -&gt; Bound&lt;'_, PyDict&gt; {
+        let dict = PyDict::new_bound(py);
+        for (key, value) in self.0 {
+            dict.set_item(key, value)
+                .expect("Failed to set_item on dict");
+        }
+        dict
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyDict, IntoPyDict};
+</span><span class="boring">use std::collections::HashMap;
+</span>
+
+<span class="boring">#[allow(dead_code)]
+</span>struct MyMap&lt;K, V&gt;(HashMap&lt;K, V&gt;);
+
+
+impl&lt;'py, K, V&gt; IntoPyDict&lt;'py&gt; for MyMap&lt;K, V&gt;
+where
+    K: IntoPyObject&lt;'py&gt;,
+    V: IntoPyObject&lt;'py&gt;,
+{
+    fn into_py_dict(self, py: Python&lt;'py&gt;) -&gt; PyResult&lt;Bound&lt;'py, PyDict&gt;&gt; {
+        let dict = PyDict::new(py);
+        for (key, value) in self.0 {
+            dict.set_item(key, value)?;
+        }
+        Ok(dict)
+    }
+}</code></pre>
+</details>
+<h2 id="从-021-升级到-022"><a class="header" href="#从-021-升级到-022">从 0.21.* 升级到 0.22</a></h2>
+<h3 id="继续弃用-gil-refs-功能"><a class="header" href="#继续弃用-gil-refs-功能">继续弃用 <code>gil-refs</code> 功能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>继 PyO3 0.21 引入“Bound”API 并计划移除“GIL Refs”API 之后，所有与 GIL Refs 相关的功能现在都被限制在 <code>gil-refs</code> 功能下，并在使用时发出弃用警告。</p>
+<p>请参阅 <a href="#from-021-to-022">0.21 迁移条目</a> 获取升级帮助。</p>
+</details>
+<h3 id="弃用尾部可选参数的隐式默认值"><a class="header" href="#弃用尾部可选参数的隐式默认值">弃用尾部可选参数的隐式默认值</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>从 <code>pyo3</code> 0.22 开始，尾部 <code>Option&lt;T&gt;</code> 类型参数的隐式 <code>None</code> 默认值已被弃用。迁移时，请在受影响的函数或方法上添加 <code>#[pyo3(signature = (...))]</code> 属性，并明确指定所需行为。迁移警告会指出保持当前行为所需的签名。到 0.23 版本，任何包含 <code>Option&lt;T&gt;</code> 类型参数的函数都将要求明确指定签名，以防止行为发生意外且未察觉的变化。到 0.24 版本，此限制将再次放宽，<code>Option&lt;T&gt;</code> 类型参数将被视为普通参数，不再有特殊处理。</p>
+<p>之前：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(deprecated, dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>#[pyfunction]
+fn increment(x: u64, amount: Option&lt;u64&gt;) -&gt; u64 {
+    x + amount.unwrap_or(1)
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>#[pyfunction]
+#[pyo3(signature = (x, amount=None))]
+fn increment(x: u64, amount: Option&lt;u64&gt;) -&gt; u64 {
+    x + amount.unwrap_or(1)
+}</code></pre>
+</details>
+<h3 id="pyclone-现在受限于-py-clone-功能"><a class="header" href="#pyclone-现在受限于-py-clone-功能"><code>Py::clone</code> 现在受限于 <code>py-clone</code> 功能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+如果你依赖 `impl<t> Clone for Py<t>` 来满足现有 Rust 代码（非基于 PyO3 编写的代码）施加的 trait 要求，则必须启用新引入的功能 `py-clone`。
+<p>然而，请注意其行为与之前版本不同。如果在未持有 GIL 的情况下调用 <code>Clone</code>，我们曾尝试延迟这些引用计数增量的应用，直到基于 PyO3 的代码重新获取 GIL 为止。这被证明无法以安全的方式实现，因此已移除。现在，如果在未持有 GIL 的情况下调用 <code>Clone</code>，我们会直接触发 panic，而调用代码可能并未为此做好准备。</p>
+<p>建议逐步弃用 <code>py-clone</code> 功能。最简单的方式是将 <code>Py&lt;T&gt;</code> 包装为 <code>Arc&lt;Py&lt;T&gt;&gt;</code>，并通过克隆 Arc 来实现。</p>
+<p>与此相关，我们也添加了一个 <code>pyo3_disable_reference_pool</code> 条件编译标志，用于移除 <code>impl&lt;T&gt; Drop for Py&lt;T&gt;</code> 所需的延迟引用计数递减基础设施。它们似乎不构成安全性隐患，最坏情况也只是内存泄漏。但是，全局同步会在跨 Python-Rust 边界时带来显著开销。启用此功能将消除这些成本，并在未持有 GIL 时调用 <code>Drop</code> 实现时直接终止进程。</p>
+
+<h3 id="为简单枚举的比较要求显式选择启用"><a class="header" href="#为简单枚举的比较要求显式选择启用">为简单枚举的比较要求显式选择启用</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>从 <code>pyo3</code> 0.22 开始，新的 <code>#[pyo3(eq)]</code> 选项允许使用 Rust 的 <code>PartialEq</code> 自动实现 Python 等值比较。在此之前，简单枚举会自动根据其判别符（discriminant）实现等值比较。为了使 PyO3 更一致，现在弃用这种自动等值实现，改为要求所有 <code>#[pyclass]</code> 类型显式选择启用。类似地，简单枚举曾支持与整数比较，但该功能不受 Rust <code>PartialEq</code> 派生支持，因此已单独拆分为 <code>#[pyo3(eq_int)]</code> 属性。</p>
+<p>迁移时，请在简单枚举类上添加 <code>#[pyo3(eq, eq_int)]</code> 属性。</p>
+<p>之前：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(deprecated, dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>#[pyclass]
+enum SimpleEnum {
+    VariantA,
+    VariantB = 42,
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>#[pyclass(eq, eq_int)]
+#[derive(PartialEq)]
+enum SimpleEnum {
+    VariantA,
+    VariantB = 42,
+}</code></pre>
+</details>
+<h3 id="pytypename-重构以更好地匹配-python-的-__name__"><a class="header" href="#pytypename-重构以更好地匹配-python-的-__name__"><code>PyType::name</code> 重构以更好地匹配 Python 的 <code>__name__</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>该函数之前会尝试直接从 Python 类型对象的 C API 字段（<code>tp_name</code>）读取内容，此时会返回 <code>Cow::Borrowed</code>。但 <code>tp_name</code> 的内容语义不明确。</p>
+<p>现在 <code>PyType::name()</code> 返回相当于 Python 中 <code>__name__</code> 的值，并返回 <code>PyResult&lt;Bound&lt;'py, PyString&gt;&gt;</code>。</p>
+<p>最接近 PyO3 0.21 版本 <code>PyType::name()</code> 的新函数是 <code>PyType::fully_qualified_name()</code>，其等价于将 <code>__module__</code> 和 <code>__qualname__</code> 连接为 <code>module.qualname</code>。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(deprecated, dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyBool};
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span>Python::with_gil(|py| {
+    let bool_type = py.get_type_bound::&lt;PyBool&gt;();
+    let name = bool_type.name()?.into_owned();
+    println!("Hello, {}", name);
+
+
+    let mut name_upper = bool_type.name()?;
+    name_upper.to_mut().make_ascii_uppercase();
+    println!("Hello, {}", name_upper);
+
+
+    Ok(())
+})
+<span class="boring">}</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyBool};
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span>Python::with_gil(|py| {
+    let bool_type = py.get_type_bound::&lt;PyBool&gt;();
+    let name = bool_type.name()?;
+    println!("Hello, {}", name);
+
+
+    // （如果需要完整的点分路径，请将 `name()` 替换为 `fully_qualified_name()`）
+    let mut name_upper = bool_type.fully_qualified_name()?.to_string();
+    name_upper.make_ascii_uppercase();
+    println!("Hello, {}", name_upper);
+
+
+    Ok(())
+})
+<span class="boring">}</span></code></pre>
+</details>
+<h2 id="从-020-升级到-021"><a class="header" href="#从-020-升级到-021">从 0.20.* 升级到 0.21</a></h2>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 0.21 引入了一个新的 <code>Bound&lt;'py, T&gt;</code> 智能指针，用于替代现有的“GIL Refs”API 来与 Python 对象交互。例如，在 PyO3 0.20 中使用 <code>&amp;'py PyAny</code> 与 Python 对象交互，而在 PyO3 0.21 中更新为 <code>Bound&lt;'py, PyAny&gt;</code>。此变更将 Rust 的所有权语义从 PyO3 内部移到用户代码中。这一改变修复了<a href="https://github.com/PyO3/pyo3/issues/3668">与 gevent 交互中已知的安全性边界情况</a>，并提升了 CPU 和 <a href="https://github.com/PyO3/pyo3/issues/1056">内存性能</a>。完整讨论历史见 <a href="https://github.com/PyO3/pyo3/issues/3382">https://github.com/PyO3/pyo3/issues/3382</a>。</p>
+<p>“GIL Ref” <code>&amp;'py PyAny</code> 以及类似 <code>&amp;'py PyDict</code> 的类型仍作为已弃用 API 可用。由于新 API 的优势，建议所有用户尽快升级。</p>
+<p>除了主要 API 类型重构外，PyO3 还对其他一些 API 进行了少量破坏性调整，以弥补正确性和安全性上的漏洞。</p>
+<p>推荐的升级到 PyO3 0.21 的步骤如下：</p>
+<ol>
+<li>启用 <code>gil-refs</code> 功能以屏蔽与 API 变更相关的弃用警告</li>
+<li>修复所有其他 PyO3 0.21 迁移步骤中指出的问题</li>
+<li>禁用 <code>gil-refs</code> 功能并迁移到新 API以下各节按此顺序排列。</li>
+</ol>
+</details>
+<h3 id="启用-gil-refs-功能"><a class="header" href="#启用-gil-refs-功能">启用 <code>gil-refs</code> 功能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>为了尽可能平滑地过渡 PyO3 生态系统，使其脱离 GIL Refs API，在 PyO3 0.21 版本中，所有消费或产生 GIL Refs 的 API 均未更改。取而代之的是引入了使用 <code>Bound&lt;T&gt;</code> 智能指针的变体。例如，<code>PyTuple::new_bound</code> 返回 <code>Bound&lt;PyTuple&gt;</code>，用以替代 <code>PyTuple::new</code>。GIL Refs 相关 API 已被弃用，但为了便于迁移，可以通过启用 <code>gil-refs</code> 功能来禁用这些弃用警告。</p>
+<blockquote>
+<p>唯一一个就地修改现有 API 的例外是 <code>pyo3::intern!</code> 宏。几乎所有对这个宏的使用都不需要更新代码来适应其改为立即返回 <code>&amp;Bound&lt;PyString&gt;</code> 的变化，而添加一个 <code>intern_bound!</code> 替代宏被认为会给用户带来额外负担。</p>
+</blockquote>
+<p>建议用户在升级到 PyO3 0.21 时首先执行此步骤，以避免弃用警告干扰其他迁移步骤的解决。</p>
+<p>之前：</p>
+<pre><code class="language-toml"># Cargo.toml
+[dependencies]
+pyo3 = "0.20"
+</code></pre>
+<p>之后：</p>
+<pre><code class="language-toml"># Cargo.toml
+[dependencies]
+pyo3 = { version = "0.21", features = ["gil-refs"] }
+</code></pre>
+</details>
+<h3 id="pytypeinfo-和-pytryfrom-已被调整"><a class="header" href="#pytypeinfo-和-pytryfrom-已被调整"><code>PyTypeInfo</code> 和 <code>PyTryFrom</code> 已被调整</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><code>PyTryFrom</code> trait 的设计已显陈旧，其 <code>try_from</code> 方法在 Rust 2021 版本的预导入（prelude）中与 <code>TryFrom::try_from</code> 冲突。此外，它的许多功能也与 <code>PyTypeInfo</code> 重复。</p>
+<p>作为 GIL Refs API 弃用工作的一部分，为使 PyO3 的 trait 体系更紧凑，<code>PyTypeInfo</code> trait 新增了一个更简单的辅助 trait <code>PyTypeCheck</code>。<code>PyAny::downcast</code> 和 <code>PyAny::downcast_exact</code> 方法不再使用 <code>PyTryFrom</code> 作为约束，而是分别使用 <code>PyTypeCheck</code> 和 <code>PyTypeInfo</code>。</p>
+<p>迁移方法：将所有类型转换从 <code>try_from(obj)</code> 改为使用 <code>obj.downcast()</code>（<code>downcast_exact</code> 同理）。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyInt, PyList};
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span>Python::with_gil(|py| {
+    let list = PyList::new(py, 0..5);
+    let b = &lt;PyInt as PyTryFrom&gt;::try_from(list.get_item(0).unwrap())?;
+    Ok(())
+})
+<span class="boring">}</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyInt, PyList};
+</span><span class="boring">fn main() -&gt; PyResult&lt;()&gt; {
+</span>Python::with_gil(|py| {
+    // 注意 PyList::new 已被弃用，应使用 PyList::new_bound，这是 GIL Refs API 移除的一部分
+    // 详见下文关于迁移到 Bound&lt;T&gt; 的章节。
+    #[allow(deprecated)]
+    let list = PyList::new(py, 0..5);
+    let b = list.get_item(0).unwrap().downcast::&lt;PyInt&gt;()?;
+    Ok(())
+})
+<span class="boring">}</span></code></pre>
+</details>
+<h3 id="iteranextoutput-已被弃用"><a class="header" href="#iteranextoutput-已被弃用"><code>Iter(A)NextOutput</code> 已被弃用</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><code>__next__</code> 和 <code>__anext__</code> 魔法方法现在可以像其他所有 <code>#[pymethods]</code> 一样，直接返回任何可转换为 Python 对象的类型。因此，<code>__next__</code> 使用的 <code>IterNextOutput</code> 以及 <code>__anext__</code> 使用的 <code>IterANextOutput</code> 均被弃用。最重要的是，这一更改允许 <code>__anext__</code> 直接返回一个可等待对象（awaitable），而无需将其无意义地包裹在 <code>Yield</code> 或 <code>Some</code> 中。只有返回类型 <code>Option&lt;T&gt;</code> 和 <code>Result&lt;Option&lt;T&gt;, E&gt;</code> 仍以特殊方式处理：<code>Some(val)</code> 表示产生 <code>val</code>，<code>None</code> 表示停止迭代。</p>
+<p>以一个使用 <code>IterNextOutput</code> 实现 Python 迭代器为例：</p>
+<pre><code class="language-rust ignore">use pyo3::prelude::*;
+use pyo3::iter::IterNextOutput;
+
+
+#[pyclass]
+struct PyClassIter {
+    count: usize,
+}
+
+
+#[pymethods]
+impl PyClassIter {
+    fn __next__(&amp;mut self) -&gt; IterNextOutput&lt;usize, &amp;'static str&gt; {
+        if self.count &lt; 5 {
+            self.count += 1;
+            IterNextOutput::Yield(self.count)
+        } else {
+            IterNextOutput::Return("done")
+        }
+    }
+}</code></pre>
+<p>如果不需要通过 <code>StopIteration</code> 返回 <code>"done"</code>，则应改写为：</p>
+<pre><code class="language-rust no_run">use pyo3::prelude::*;
+
+
+#[pyclass]
+struct PyClassIter {
+    count: usize,
+}
+
+
+#[pymethods]
+impl PyClassIter {
+    fn __next__(&amp;mut self) -&gt; Option&lt;usize&gt; {
+        if self.count &lt; 5 {
+            self.count += 1;
+            Some(self.count)
+        } else {
+            None
+        }
+    }
+}</code></pre>
+<p>这种写法还有额外优点：它在之前版本的 PyO3 中已经可用，与 Rust 的 <a href="https://doc.rust-lang.org/stable/std/iter/trait.Iterator.html"><code>Iterator</code> trait</a> 签名一致，并允许在 CPython 中使用快速路径，完全避免抛出 <code>StopIteration</code> 异常的开销。注意，通过使用 <a href="https://doc.rust-lang.org/stable/std/option/enum.Option.html#method.transpose"><code>Option::transpose</code></a> 和 <code>Result&lt;Option&lt;T&gt;, E&gt;</code> 变体，此形式也可用于包装可能出错的迭代器。</p>
+<p>或者，也可以像在 Python 中一样，通过“抛出”<code>StopIteration</code> 异常来实现：</p>
+<pre><code class="language-rust no_run">use pyo3::prelude::*;
+use pyo3::exceptions::PyStopIteration;
+
+
+#[pyclass]
+struct PyClassIter {
+    count: usize,
+}
+
+
+#[pymethods]
+impl PyClassIter {
+    fn __next__(&amp;mut self) -&gt; PyResult&lt;usize&gt; {
+        if self.count &lt; 5 {
+            self.count += 1;
+            Ok(self.count)
+        } else {
+            Err(PyStopIteration::new_err("done"))
+        }
+    }
+}</code></pre>
+<p>最后，异步迭代器可以直接返回一个可等待对象，而无需混淆的包装：</p>
+<pre><code class="language-rust no_run">use pyo3::prelude::*;
+
+
+#[pyclass]
+struct PyClassAwaitable {
+    number: usize,
+}
+
+
+#[pymethods]
+impl PyClassAwaitable {
+    fn __next__(&amp;self) -&gt; usize {
+        self.number
+    }
+
+
+    fn __await__(slf: Py&lt;Self&gt;) -&gt; Py&lt;Self&gt; {
+        slf
+    }
+}
+
+
+#[pyclass]
+struct PyClassAsyncIter {
+    number: usize,
+}
+
+
+#[pymethods]
+impl PyClassAsyncIter {
+    fn __anext__(&amp;mut self) -&gt; PyClassAwaitable {
+        self.number += 1;
+        PyClassAwaitable {
+            number: self.number,
+        }
+    }
+
+
+    fn __aiter__(slf: Py&lt;Self&gt;) -&gt; Py&lt;Self&gt; {
+        slf
+    }
+}</code></pre>
+</details>
+<h3 id="pytypename-已重命名为-pytypequalname"><a class="header" href="#pytypename-已重命名为-pytypequalname"><code>PyType::name</code> 已重命名为 <code>PyType::qualname</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><code>PyType::name</code> 已重命名为 <code>PyType::qualname</code>，以表明其确实返回的是<a href="https://docs.python.org/3/glossary.html#term-qualified-name">限定名称</a>，与 <code>__qualname__</code> 属性一致。新添加的 <code>PyType::name</code> 方法现在返回包含模块名称的完整名称，对应属性层面的 <code>__module__.__name__</code>。</p>
+</details>
+<h3 id="pycell-已被弃用"><a class="header" href="#pycell-已被弃用"><code>PyCell</code> 已被弃用</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>用 Rust 实现的 Python 对象的交互不再需要通过 <code>PyCell&lt;T&gt;</code>。现在，无论 <code>T</code> 是原生 Python 对象还是用 <code>#[pyclass]</code> 定义的 Rust 类型，与 Python 对象的交互都一致地通过 <code>Bound&lt;T&gt;</code> 或 <code>Py&lt;T&gt;</code> 进行。使用 <code>Bound::new</code> 或 <code>Py::new</code> 创建对象，并使用 <code>Bound::borrow(_mut)</code> / <code>Py::borrow(_mut)</code> 来借用内部的 Rust 对象。</p>
+</details>
+<h3 id="从-gil-refs-api-迁移到-boundt"><a class="header" href="#从-gil-refs-api-迁移到-boundt">从 GIL Refs API 迁移到 <code>Bound&lt;T&gt;</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>为了尽量减少对使用 GIL Refs API 的代码造成破坏，PyO3 引入了 <code>Bound&lt;T&gt;</code> 智能指针，并为所有接收或返回 GIL Refs 的函数提供了对应的替代版本。这使代码可以通过用新 API 替换旧的弃用 API 来逐步迁移。</p>
+<p>要识别需要迁移的部分，可临时关闭 <code>gil-refs</code> 功能，以查看几乎所有使用接受或产生 GIL Refs 的 API<a href="#cases-where-pyo3-cannot-emit-gil-ref-deprecation-warnings">位置</a>上的弃用警告。通过一个或多个 PR，可以依照弃用提示逐步更新代码。根据开发环境不同，关闭 <code>gil-refs</code> 功能可能会引入<a href="#deactivating-the-gil-refs-feature">一些特定的错误</a>，因此可能需要先修复这些错误。</p>
+<p>例如，以下 API 均已获得更新的变体：</p>
+<ul>
+<li><code>PyList::new</code>、<code>PyTuple::new</code> 等构造函数，对应替代为 <code>PyList::new_bound</code>、<code>PyTuple::new_bound</code> 等。</li>
+<li><code>FromPyObject::extract</code> 有了新的 <code>FromPyObject::extract_bound</code>（见下文）。</li>
+<li><code>PyTypeInfo</code> trait 新增了 <code>_bound</code> 方法，用于接收或返回 <code>Bound&lt;T&gt;</code>。</li>
+</ul>
+<p>由于新的 <code>Bound&lt;T&gt;</code> API 将所有权从 PyO3 框架移交到了用户代码中，因此在切换到新 API 时，用户代码可能需要进行如下调整：</p>
+<ul>
+<li>代码可能需要添加偶尔的 <code>&amp;</code> 来借用新的智能指针 <code>&amp;Bound&lt;T&gt;</code> 进行传递（或使用 <code>.clone()</code>，其代价是轻微增加 Python 引用计数）。</li>
+<li><code>Bound&lt;PyList&gt;</code> 和 <code>Bound&lt;PyTuple&gt;</code> 不支持 <code>list[0]</code> 索引，而应使用 <code>list.get_item(0)</code>。</li>
+<li><code>Bound&lt;PyTuple&gt;::iter_borrowed</code> 比 <code>Bound&lt;PyTuple&gt;::iter</code> 稍微更高效。<code>Bound&lt;PyTuple&gt;</code> 的默认迭代无法返回借用引用，因为 Rust 目前尚未支持“出借迭代器”（lending iterators）。同理，<code>Bound&lt;PyTuple&gt;::get_borrowed_item</code> 比 <code>get_item</code> 更高效。</li>
+<li><code>&amp;Bound&lt;T&gt;</code> 不再实现 <code>FromPyObject</code>（尽管未来在 GIL Refs API 完全移除后可能实现）。应使用 <code>bound_any.downcast::&lt;T&gt;()</code> 替代 <code>bound_any.extract::&lt;&amp;Bound&lt;T&gt;&gt;()</code>。</li>
+<li><code>Bound&lt;PyString&gt;::to_str</code> 现在从 <code>Bound&lt;PyString&gt;</code> 本身借用，而非从原有的 <code>'py</code> 生命周期借用，因此在某些之前 <code>&amp;PyString</code> 仅作为临时值使用的地方，现在需要将智能指针作为值存储。（<a href="#deactivating-the-gil-refs-feature">下文</a> 中对此有更多细节说明。）</li>
+</ul>
+</details>- `.extract::&lt;&amp;str&gt;()` 现在会从源 Python 对象借用。最简单的升级方式是改为使用 `.extract::<pybackedstr>()`，它可以保留对 Python 引用的所有权。更多信息请参见[关于停用 `gil-refs` 特性的章节](#deactivating-the-gil-refs-feature)。
+<p>要在 <code>&amp;PyAny</code> 和 <code>&amp;Bound&lt;PyAny&gt;</code> 之间转换，请使用 <code>as_borrowed()</code> 方法：</p>
+<pre><code class="language-rust ignore">let gil_ref: &amp;PyAny = ...;
+let bound: &amp;Bound&lt;PyAny&gt; = &amp;gil_ref.as_borrowed();</code></pre>
+<p>要在 <code>Py&lt;T&gt;</code> 和 <code>Bound&lt;T&gt;</code> 之间转换，请使用 <code>bind()</code> / <code>into_bound()</code> 方法；要从 <code>Bound&lt;T&gt;</code> 回到 <code>Py&lt;T&gt;</code>，请使用 <code>as_unbound()</code> / <code>unbind()</code> 方法。</p>
+<pre><code class="language-rust ignore">let obj: Py&lt;PyList&gt; = ...;
+let bound: &amp;Bound&lt;'py, PyList&gt; = obj.bind(py);
+let bound: Bound&lt;'py, PyList&gt; = obj.into_bound(py);
+
+let obj: &amp;Py&lt;PyList&gt; = bound.as_unbound();
+let obj: Py&lt;PyList&gt; = bound.unbind();</code></pre>
+<div class="warning">
+<p>⚠️ 警告：悬垂指针陷阱 💣</p>
+<blockquote>
+<p>由于所有权的变更，那些使用 <code>.as_ptr()</code> 将 <code>&amp;PyAny</code> 和其他 GIL 引用转换为 <code>*mut pyo3_ffi::PyObject</code> 的代码，现在需要特别注意避免在 <code>Bound&lt;PyAny&gt;</code> 持有所有权的情况下创建悬垂指针。</p>
+<p>例如，在迁移到 <code>Bound&lt;PyAny&gt;</code> 智能指针时，以下使用 <code>Option&lt;&amp;PyAny&gt;</code> 的模式很容易产生悬垂指针：</p>
+<pre><code class="language-rust ignore">let opt: Option&lt;&amp;PyAny&gt; = ...;
+let p: *mut ffi::PyObject = opt.map_or(std::ptr::null_mut(), |any| any.as_ptr());</code></pre>
+<p>正确的迁移方式是使用 <code>.as_ref()</code>，以避免在 <code>map_or</code> 闭包中提前析构 <code>Bound&lt;PyAny&gt;</code>：</p>
+<pre><code class="language-rust ignore">let opt: Option&lt;Bound&lt;PyAny&gt;&gt; = ...;
+let p: *mut ffi::PyObject = opt.as_ref().map_or(std::ptr::null_mut(), Bound::as_ptr);</code></pre>
+</blockquote>
+</div>
+
+<h4 id="迁移-frompyobject-的实现"><a class="header" href="#迁移-frompyobject-的实现">迁移 <code>FromPyObject</code> 的实现</a></h4>
+<p><code>FromPyObject</code> 新增了一个方法 <code>extract_bound</code>，其参数为 <code>&amp;Bound&lt;'py, PyAny&gt;</code> 而非 <code>&amp;PyAny</code>。<code>extract</code> 和 <code>extract_bound</code> 都已被提供了彼此的默认实现，以避免在升级到 0.21 时立刻破坏现有代码。</p>
+<p>所有 <code>FromPyObject</code> 的实现都应从 <code>extract</code> 迁移到 <code>extract_bound</code>。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore">impl&lt;'py&gt; FromPyObject&lt;'py&gt; for MyType {
+    fn extract(obj: &amp;'py PyAny) -&gt; PyResult&lt;Self&gt; {
+        /* ... */
+    }
+}</code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust ignore">impl&lt;'py&gt; FromPyObject&lt;'py&gt; for MyType {
+    fn extract_bound(obj: &amp;Bound&lt;'py, PyAny&gt;) -&gt; PyResult&lt;Self&gt; {
+        /* ... */
+    }
+}</code></pre>
+<p>预计在 0.22 版本中，<code>extract_bound</code> 将不再提供默认实现；在 0.23 版本中，<code>extract</code> 将被完全移除。</p>
+<h4 id="pyo3-无法发出-gil-引用弃用警告的场景"><a class="header" href="#pyo3-无法发出-gil-引用弃用警告的场景">PyO3 无法发出 GIL 引用弃用警告的场景</a></h4>
+<p>尽管 PyO3 产生了大量弃用警告以帮助用户从 GIL 引用迁移到 Bound API，但仍有一些情况下无法自动警告 GIL 引用的使用。在处理完所有弃用警告后，建议手动检查以下情况：</p>
+<ul>
+<li><code>FromPyObject</code> trait 的具体实现无法被标记为弃用，因此 PyO3 无法警告类似 <code>.extract&lt;&amp;PyAny&gt;()</code> 这样产生 GIL 引用的代码模式。</li>
+<li><code>#[pyfunction]</code> 参数中的 GIL 引用会发出警告，但如果 GIL 引用被包裹在其他容器中（例如 <code>Vec&lt;&amp;PyAny&gt;</code>），PyO3 就无法发出警告。</li>
+<li><code>wrap_pyfunction!(function)(py)</code> 这种延迟传参形式的宏调用中，当传入 <code>py: Python&lt;'py&gt;</code> 时会产生 GIL 引用，但由于类型推导的限制，PyO3 无法针对此情况发出警告。</li>
+</ul>
+
+<h3 id="停用-gil-refs-特性"><a class="header" href="#停用-gil-refs-特性">停用 <code>gil-refs</code> 特性</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>作为迁移的最后一步，停用 <code>gil-refs</code> 特性将为代码带来最佳性能，并为 PyO3 0.22 建立向前兼容的 API。</p>
+<p>此时，原先需要管理 GIL 引用内存的代码可以安全地移除对 <code>GILPool</code> 的使用（该对象由 <code>Python::new_pool</code> 和 <code>Python::with_pool</code> 调用创建）。弃用警告将高亮这些使用场景。</p>
+<p>禁用该特性后，只有一种情况会导致代码行为变化：对于那些直接从输入数据借用的类型，PyO3 在没有 GIL 引用的情况下无法实现 <code>FromPyObject</code> trait（目前正处于移除 GIL 引用 API 的过程中）。主要受影响的类型包括 <code>&amp;str</code>、<code>Cow&lt;'_, str&gt;</code>、<code>&amp;[u8]</code>、<code>Cow&lt;'_, u8&gt;</code>。</p>
+<p>为了在 GIL 引用 API 被移除的过程中保持 PyO3 核心功能的可用性，禁用 <code>gil-refs</code> 特性后，<code>&amp;str</code>、<code>Cow&lt;'_, str&gt;</code>、<code>&amp;[u8]</code>、<code>Cow&lt;'_, u8&gt;</code> 的 <code>FromPyObject</code> 实现将被移至一个新的临时 trait <code>FromPyObjectBound</code>。该 trait 是未来 <code>FromPyObject</code> 的预期形态，额外引入了一个生命周期 <code>'a</code>，以支持这些类型从 Python 对象中借用数据。</p>
+<p>PyO3 0.21 引入了 <a href="{{#PYO3_DOCS_URL}}/pyo3/pybacked/struct.PyBackedStr.html"><code>PyBackedStr</code></a> 和 <a href="{{#PYO3_DOCS_URL}}/pyo3/pybacked/struct.PyBackedBytes.html"><code>PyBackedBytes</code></a> 类型来应对这一变化。避免 <code>&amp;str</code> 提取带来的生命周期问题的最简单方式就是使用这两个类型。对于更复杂的类型（如 <code>Vec&lt;&amp;str&gt;</code>），现在已经无法直接从 Python 对象中提取，推荐的升级路径是使用 <code>Vec&lt;PyBackedStr&gt;</code>。</p>
+<p>需要注意的是，由于提取这些类型现在绑定到了输入对象的生命周期，一些非常常见的模式可能需要拆分为多行 Rust 代码。例如，以下直接在 <code>.getattr()</code> 结果上调用 <code>.extract::&lt;&amp;str&gt;()</code> 的代码片段，在停用 <code>gil-refs</code> 特性后需要进行调整。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore"><span class="boring">#[cfg(feature = "gil-refs")] {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyList, PyType};
+</span><span class="boring">fn example&lt;'py&gt;(py: Python&lt;'py&gt;) -&gt; PyResult&lt;()&gt; {
+</span>#[allow(deprecated)] // GIL Ref API
+let obj: &amp;'py PyType = py.get_type::&lt;PyList&gt;();
+let name: &amp;'py str = obj.getattr("__name__")?.extract()?;
+assert_eq!(name, "list");
+<span class="boring">Ok(())
+</span><span class="boring">}
+</span><span class="boring">Python::with_gil(example).unwrap();
+</span><span class="boring">}</span></code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust ignore"><span class="boring">#[cfg(any(not(Py_LIMITED_API), Py_3_10))] {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyList, PyType};
+</span><span class="boring">fn example&lt;'py&gt;(py: Python&lt;'py&gt;) -&gt; PyResult&lt;()&gt; {
+</span>let obj: Bound&lt;'py, PyType&gt; = py.get_type_bound::&lt;PyList&gt;();
+let name_obj: Bound&lt;'py, PyAny&gt; = obj.getattr("__name__")?;
+// 数据的生命周期不再是 `'py`，而是上文 `name_obj` 智能指针的更短生命周期
+let name: &amp;'_ str = name_obj.extract()?;
+assert_eq!(name, "list");
+<span class="boring">Ok(())
+</span><span class="boring">}
+</span><span class="boring">Python::with_gil(example).unwrap();
+</span><span class="boring">}</span></code></pre>
+<p>如果希望完全避免处理生命周期问题，也可以使用新的 <code>PyBackedStr</code> 类型，它存储对 Python <code>str</code> 的引用但无需附加生命周期。特别是对于低于 3.10 版本 Python 的 <code>abi3</code> 构建，<code>PyBackedStr</code> 非常有用。由于旧版本 <code>abi3</code> CPython API 的限制，PyO3 无法在这些版本上为 <code>&amp;str</code> 提供 <code>FromPyObjectBound</code> 实现。因此，对于旧版 <code>abi3</code> 构建，最简单的迁移方式是将所有 <code>.extract::&lt;&amp;str&gt;()</code> 替换为 <code>.extract::&lt;PyBackedStr&gt;()</code>。或者，也可使用 <code>.extract::&lt;Cow&lt;str&gt;&gt;()</code>、<code>.extract::&lt;String&gt;()</code> 将数据复制到 Rust 中。</p>
+<p>以下示例与上面类似，但最终提取类型为 <code>PyBackedStr</code>：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::{PyList, PyType};
+</span><span class="boring">fn example&lt;'py&gt;(py: Python&lt;'py&gt;) -&gt; PyResult&lt;()&gt; {
+</span>use pyo3::pybacked::PyBackedStr;
+let obj: Bound&lt;'py, PyType&gt; = py.get_type_bound::&lt;PyList&gt;();
+let name: PyBackedStr = obj.getattr("__name__")?.extract()?;
+assert_eq!(&amp;*name, "list");
+<span class="boring">Ok(())
+</span><span class="boring">}
+</span><span class="boring">Python::with_gil(example).unwrap();</span></code></pre>
+</details>
+<h2 id="从-019-升级到-020"><a class="header" href="#从-019-升级到-020">从 0.19.* 升级到 0.20</a></h2>
+<h3 id="停止支持旧技术"><a class="header" href="#停止支持旧技术">停止支持旧技术</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 0.20 将最低 Rust 版本提升至 1.56。这使得项目可以使用更新的语言特性，并简化了维护工作。</p>
+</details>
+<h3 id="pydictget_item-现在返回-result"><a class="header" href="#pydictget_item-现在返回-result"><code>PyDict::get_item</code> 现在返回 <code>Result</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 0.19 及更早版本中，<code>PyDict::get_item</code> 使用了会抑制所有异常并在出错时返回 <code>None</code> 的 Python API。这包括在查找键时其 <code>__hash__</code> 和 <code>__eq__</code> 方法中出现的错误。</p>
+<p>Python 核心开发者的最新建议是避免使用会抑制异常的 API，而应让异常向上抛出。<code>PyDict::get_item_with_error</code> 已经实现了这一推荐行为，因此该 API 被重命名为 <code>PyDict::get_item</code>。</p>
+<p>迁移前：</p>
+<pre><code class="language-rust ignore">use pyo3::prelude::*;
+use pyo3::exceptions::PyTypeError;
+use pyo3::types::{PyDict, IntoPyDict};
+
+<span class="boring">fn main() {
+</span><span class="boring">let _ =
+</span>Python::with_gil(|py| {
+    let dict: &amp;PyDict = [("a", 1)].into_py_dict(py);
+    // `a` 在字典中，值为 1
+    assert!(dict.get_item("a").map_or(Ok(false), |x| x.eq(1))?);
+    // `b` 不在字典中
+    assert!(dict.get_item("b").is_none());
+    // `dict` 不可哈希，因此此处会抛出 `TypeError`
+    assert!(dict
+        .get_item_with_error(dict)
+        .unwrap_err()
+        .is_instance_of::&lt;PyTypeError&gt;(py));
+});
+<span class="boring">}</span></code></pre>
+<p>迁移后：</p>
+<pre><code class="language-rust ignore">use pyo3::prelude::*;
+use pyo3::exceptions::PyTypeError;
+use pyo3::types::{PyDict, IntoPyDict};
+
+<span class="boring">fn main() {
+</span><span class="boring">let _ =
+</span>Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+    let dict: &amp;PyDict = [("a", 1)].into_py_dict(py);
+    // `a` 在字典中，值为 1
+    assert!(dict.get_item("a")?.map_or(Ok(false), |x| x.eq(1))?);
+    // `b` 不在字典中
+    assert!(dict.get_item("b")?.is_none());
+    // `dict` 不可哈希，因此此处会抛出 `TypeError`
+    assert!(dict
+        .get_item(dict)
+        .unwrap_err()
+        .is_instance_of::&lt;PyTypeError&gt;(py));
+
+    Ok(())
+});
+<span class="boring">}</span></code></pre>
+</details>### 在可选参数之后不再接受必需参数
+<details>
+<summary><small>点击展开</small></summary>
+<p>尾随的 <code>Option&lt;T&gt;</code> 参数具有自动默认值 <code>None</code>。为了避免在修改函数签名时产生意外行为，从 PyO3 0.18 开始，若在 <code>Option&lt;T&gt;</code> 参数之后存在必需参数，且未使用 <code>#[pyo3(signature = (...))]</code> 显式指定默认值，则会触发弃用警告。在 PyO3 0.20 中，这将成为硬性错误。</p>
+<p>修改前：</p>
+<pre><code class="language-rust ignore">#[pyfunction]
+fn x_or_y(x: Option&lt;u64&gt;, y: u64) -&gt; u64 {
+    x.unwrap_or(y)
+}</code></pre>
+<p>修改后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyfunction]
+#[pyo3(signature = (x, y))] // x 和 y 都没有默认值，均为必需参数
+fn x_or_y(x: Option&lt;u64&gt;, y: u64) -&gt; u64 {
+    x.unwrap_or(y)
+}</code></pre>
+</details>
+<h3 id="移除已弃用的函数形式"><a class="header" href="#移除已弃用的函数形式">移除已弃用的函数形式</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 0.18 中，<code>#[pymethods]</code> 的 <code>#[args]</code> 属性以及直接在 <code>#[pyfunction]</code> 中指定函数签名的方式已被弃用。该功能已在 PyO3 0.20 中移除。</p>
+<p>修改前：</p>
+<pre><code class="language-rust ignore">#[pyfunction]
+#[pyo3(a, b = "0", "/")]
+fn add(a: u64, b: u64) -&gt; u64 {
+    a + b
+}</code></pre>
+<p>修改后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyfunction]
+#[pyo3(signature = (a, b=0, /))]
+fn add(a: u64, b: u64) -&gt; u64 {
+    a + b
+}</code></pre>
+</details>
+<h3 id="移除-intopypointer-trait"><a class="header" href="#移除-intopypointer-trait">移除 <code>IntoPyPointer</code> trait</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>提供 <code>into_ptr</code> 方法的 trait <code>IntoPyPointer</code> 已被移除。<code>into_ptr</code> 现在作为固有方法直接存在于此前实现该 trait 的所有类型上。</p>
+</details>
+<h3 id="aspypointer-现在为-unsafe-trait"><a class="header" href="#aspypointer-现在为-unsafe-trait"><code>AsPyPointer</code> 现在为 <code>unsafe</code> trait</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>trait <code>AsPyPointer</code> 现在被标记为 <code>unsafe trait</code>，意味着任何外部实现都必须使用 <code>unsafe impl</code> 标记，并确保始终返回有效的指针。</p>
+</details>
+<h2 id="从-018-升级到-019"><a class="header" href="#从-018-升级到-019">从 0.18.* 升级到 0.19</a></h2>
+<h3 id="现在禁止在-__traverse__-实现中访问-python"><a class="header" href="#现在禁止在-__traverse__-实现中访问-python">现在禁止在 <code>__traverse__</code> 实现中访问 <code>Python</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 Python 垃圾回收的 <code>__traverse__</code> 实现过程中，仅允许遍历 <code>#[pyclass]</code> 的成员，其他任何操作均被禁止。这意味着不允许调用 Python 函数或其他 API。</p>
+<p>早期版本的 PyO3 允许访问 <code>Python</code>（例如通过 <code>Python::with_gil</code>），这可能导致 Python 解释器崩溃或干扰垃圾回收算法。</p>
+<p>现在，尝试获取 GIL 将触发 panic。详情请见 <a href="https://github.com/PyO3/pyo3/issues/3165">#3165</a>。</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyclass]
+struct SomeClass {}
+
+
+impl SomeClass {
+    fn __traverse__(&amp;self, pyo3::class::gc::PyVisit&lt;'_&gt;) -&gt; Result&lt;(), pyo3::class::gc::PyTraverseError&gt;` {
+        Python::with_gil(|| { /*...*/ })  // 错误：此处将 panic
+    }
+}</code></pre>
+</details>
+<h3 id="当内部错误为简单-pyerr-时anyhowerror--eyrereport-转换更智能"><a class="header" href="#当内部错误为简单-pyerr-时anyhowerror--eyrereport-转换更智能">当内部错误为“简单” <code>PyErr</code> 时，<code>anyhow::Error</code> / <code>eyre::Report</code> 转换更智能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>当从 <code>anyhow::Error</code> 或 <code>eyre::Report</code> 转换为 <code>PyErr</code> 时，如果内部错误是一个“简单”的 <code>PyErr</code>（即没有源错误），则该内部错误将直接用作 <code>PyErr</code>，而不是将其包装在一个新的 <code>PyRuntimeError</code> 中并将原信息转为字符串。</p>
+<pre><code class="language-rust ignore"><span class="boring">#[cfg(feature = "anyhow")]
+</span><span class="boring">#[allow(dead_code)]
+</span><span class="boring">mod anyhow_only {
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::exceptions::PyValueError;
+</span>#[pyfunction]
+fn raise_err() -&gt; anyhow::Result&lt;()&gt; {
+    Err(PyValueError::new_err("original error message").into())
+}
+
+
+fn main() {
+    Python::with_gil(|py| {
+        let rs_func = wrap_pyfunction!(raise_err, py).unwrap();
+        pyo3::py_run!(
+            py,
+            rs_func,
+            r"
+        try:
+            rs_func()
+        except Exception as e:
+            print(repr(e))
+        "
+        );
+    })
+}
+<span class="boring">}</span></code></pre>
+<p>此前，上述代码会输出 <code>RuntimeError('ValueError: original error message')</code>，这可能会令人困惑。</p>
+<p>现在，同样的代码将输出 <code>ValueError: original error message</code>，更加直观。</p>
+<p>然而，如果 <code>anyhow::Error</code> 或 <code>eyre::Report</code> 包含源错误，则原始异常仍将被包装在 <code>PyRuntimeError</code> 中。</p>
+</details>
+<h3 id="已移除弃用的-pythonacquire_gil必须改用-pythonwith_gil"><a class="header" href="#已移除弃用的-pythonacquire_gil必须改用-pythonwith_gil">已移除弃用的 <code>Python::acquire_gil</code>，必须改用 <code>Python::with_gil</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>虽然 <a href="https://docs.rs/pyo3/0.18.3/pyo3/marker/struct.Python.html#method.acquire_gil"><code>Python::acquire_gil</code></a> 提供的 API 看似方便，但它存在一定的脆弱性，因为 <a href="https://docs.rs/pyo3/0.18.3/pyo3/marker/struct.Python.html"><code>Python</code></a> token 的设计依赖于正确的嵌套结构，若使用不当会导致 panic，例如：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(dead_code, deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyclass]
+struct SomeClass {}
+
+
+struct ObjectAndGuard {
+    object: Py&lt;SomeClass&gt;,
+    guard: GILGuard,
+}
+
+
+impl ObjectAndGuard {
+    fn new() -&gt; Self {
+        let guard = Python::acquire_gil();
+        let object = Py::new(guard.python(), SomeClass {}).unwrap();
+
+
+        Self { object, guard }
+    }
+}
+
+
+let first = ObjectAndGuard::new();
+let second = ObjectAndGuard::new();
+// 由于 `second` 内部的 guard 仍存活，此处会 panic
+drop(first);
+drop(second);</code></pre>
+<p>替代方案是 <a href="https://docs.rs/pyo3/0.18.3/pyo3/marker/struct.Python.html#method.with_gil"><code>Python::with_gil</code></a>，虽然用起来更繁琐，但其设计上强制了正确的嵌套结构，例如：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyclass]
+struct SomeClass {}
+
+
+struct Object {
+    object: Py&lt;SomeClass&gt;,
+}
+
+
+impl Object {
+    fn new(py: Python&lt;'_&gt;) -&gt; Self {
+        let object = Py::new(py, SomeClass {}).unwrap();
+
+
+        Self { object }
+    }
+}
+
+
+// 要么强制我们在再次获取 GIL 前释放它
+let first = Python::with_gil(|py| Object::new(py));
+let second = Python::with_gil(|py| Object::new(py));
+drop(first);
+drop(second);
+
+
+// 要么确保内部锁在外部锁之前释放
+Python::with_gil(|py| {
+    let first = Object::new(py);
+    let second = Python::with_gil(|py| Object::new(py));
+    drop(first);
+    drop(second);
+});</code></pre>
+<p>此外，<code>Python::acquire_gil</code> 提供对 <code>GILGuard</code> 的所有权，该对象可被自由存储和传递。这通常并无帮助，反而可能导致锁长期持有，阻塞程序其他部分的执行。而 <code>Python::with_gil</code> 提供的 Python token 具有生成性生命周期（generative lifetime），只能向下传递调用链，从而避免了该问题。通常，任何 GIL 绑定的引用 <code>&amp;'py PyAny</code> 也可通过 <a href="https://docs.rs/pyo3/0.22.5/pyo3/types/struct.PyAny.html#method.py"><code>PyAny::py</code></a> 方法获得 <code>Python&lt;'py&gt;</code> token，从而完全避免此类问题。</p>
+</details>
+<h2 id="从-017-升级到-018"><a class="header" href="#从-017-升级到-018">从 0.17.* 升级到 0.18</a></h2>
+<h3 id="option_-参数之后的必需参数将不再自动推断"><a class="header" href="#option_-参数之后的必需参数将不再自动推断"><code>Option&lt;_&gt;</code> 参数之后的必需参数将不再自动推断</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 <code>#[pyfunction]</code> 和 <code>#[pymethods]</code> 中，如果像 <code>i32</code> 这样的“必需”函数参数出现在 <code>Option&lt;_&gt;</code> 参数之后，则该 <code>Option&lt;_&gt;</code> 会隐式地被视为必需参数（所有尾随的 <code>Option&lt;_&gt;</code> 参数原本被视为可选，具有 <code>None</code> 的默认值）。</p>
+<p>从 PyO3 0.18 开始，此行为已被弃用，未来版本将要求使用 <a href="./function/signature.html"><code>#[pyo3(signature = (...))]</code> 选项</a> 显式声明开发者的意图。</p>
+<p>此前，在以下示例中，x 必须由 Python 代码显式传入：</p>
+<pre><code class="language-rust compile_fail ignore"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+#[pyfunction]
+fn required_argument_after_option(x: Option&lt;i32&gt;, y: i32) {}</code></pre>
+<p>修改后，需显式指定预期的 Python 签名：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span><span class="boring">use pyo3::prelude::*;
+</span>
+
+// 如果 x 确实应为必需参数
+#[pyfunction(signature = (x, y))]
+fn required_argument_after_option_a(x: Option&lt;i32&gt;, y: i32) {}
+
+
+// 如果 x 应为可选参数，则 y 也需有默认值
+#[pyfunction(signature = (x=None, y=0))]
+fn required_argument_after_option_b(x: Option&lt;i32&gt;, y: i32) {}</code></pre>
+</details>
+<h3 id="__text_signature__-现在会为-pyfunction-和-pymethods-自动生成"><a class="header" href="#__text_signature__-现在会为-pyfunction-和-pymethods-自动生成"><code>__text_signature__</code> 现在会为 <code>#[pyfunction]</code> 和 <code>#[pymethods]</code> 自动生成</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>过去，唯一支持设置生成 Python 函数的 <code>__text_signature__</code> 属性的方式是 <a href="./function/signature.html#making-the-function-signature-available-to-python"><code>#[pyo3(text_signature = "...")]</code> 选项</a>。</p>
+<p>现在，PyO3 能够基于函数的 Rust 签名（或新的 <a href="./function/signature.html"><code>#[pyo3(signature = (...))]</code> 选项</a>）自动为所有函数填充 <code>__text_signature__</code>。这些自动生成的 <code>__text_signature__</code> 值当前对于所有默认值统一显示为 <code>...</code>。在升级到 PyO3 0.18 时，许多 <code>#[pyo3(text_signature = "...")]</code> 选项可以被删除。但目前，对于包含默认值的函数，手动实现可能仍更受青睐。</p>
+<p>例如：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span>
+
+// 此处的 `text_signature` 选项已不再必要，因为 PyO3 会自动生成完全相同的值。
+#[pyfunction(text_signature = "(a, b, c)")]
+fn simple_function(a: i32, b: i32, c: i32) {}
+
+
+// 在 PyO3 0.18 中，此处 `text_signature` 仍有价值，因为自动生成的签名会是 "(a, b=..., c=...)"。
+#[pyfunction(signature = (a, b = 1, c = 2), text_signature = "(a, b=1, c=2)")]
+fn function_with_defaults(a: i32, b: i32, c: i32) {}
+
+
+<span class="boring">fn main() {
+</span><span class="boring">    Python::attach(|py| {
+</span><span class="boring">        let simple = wrap_pyfunction!(simple_function, py).unwrap();
+</span><span class="boring">        assert_eq!(simple.getattr("__text_signature__").unwrap().to_string(), "(a, b, c)");
+</span><span class="boring">        let defaulted = wrap_pyfunction!(function_with_defaults, py).unwrap();
+</span><span class="boring">        assert_eq!(defaulted.getattr("__text_signature__").unwrap().to_string(), "(a, b=1, c=2)");
+</span><span class="boring">    })
+</span><span class="boring">}
+</span>```&lt;/details&gt;
+
+# 从 0.16.* 升级到 0.17
+
+## `PyMapping` 和 `PySequence` 类型的类型检查已更改
+
+&lt;details&gt;
+&lt;summary&gt;&lt;small&gt;点击展开&lt;/small&gt;&lt;/summary&gt;
+
+此前，`PyMapping` 和 `PySequence` 的类型检查（在 `PyTryFrom` 中实现）使用的是 Python C-API 函数 `PyMapping_Check` 和 `PySequence_Check`。遗憾的是，这些函数不足以准确区分这些类型，导致行为不一致（参见 [pyo3/pyo3#2072](https://github.com/PyO3/pyo3/issues/2072)）。
+
+PyO3 0.17 将这些向下转型检查更改为显式测试类型是否为对应的抽象基类 `collections.abc.Mapping` 或 `collections.abc.Sequence` 的子类。请注意，这需要调用 Python 运行时，因此相比之前的方法可能会带来性能开销。如果性能损失成为一个问题，你可以自行执行检查，并使用 `try_from_unchecked`（不安全方法）。
+
+另一个副作用是，在 Rust 中使用 PyO3 定义的 pyclass 必须被**注册**到对应的 Python 抽象基类，向下转型才能成功。为此新增了 `PySequence::register` 和 `PyMapping::register` 方法，便于从 Rust 代码中完成注册。它们等价于在 Python 中调用 `collections.abc.Mapping.register(MappingPyClass)` 或 `collections.abc.Sequence.register(SequencePyClass)`。
+
+例如，对于一个在 Rust 中定义的映射类：
+
+```rust,compile_fail
+use pyo3::prelude::*;
+use std::collections::HashMap;
+
+#[pyclass(mapping)]
+struct Mapping {
+    index: HashMap&lt;String, usize&gt;,
+}
+
+#[pymethods]
+impl Mapping {
+    #[new]
+    fn new(elements: Option&lt;&amp;PyList&gt;) -&gt; PyResult&lt;Self&gt; {
+    // ...
+    // 此映射 pyclass 的实现被截断 —— 基本上是 HashMap 的封装
+}</code></pre>
+<p>你必须在向下转型生效前将类注册到 <code>collections.abc.Mapping</code>：</p>
+<pre><code class="language-rust compile_fail">let m = Py::new(py, Mapping { index }).unwrap();
+assert!(m.as_ref(py).downcast::&lt;PyMapping&gt;().is_err());
+PyMapping::register::&lt;Mapping&gt;(py).unwrap();
+assert!(m.as_ref(py).downcast::&lt;PyMapping&gt;().is_ok());</code></pre>
+<p>需要注意的是，未来当 pyclass 能够直接继承抽象基类时，这一要求可能会被移除（参见 <a href="https://github.com/PyO3/pyo3/issues/991">pyo3/pyo3#991</a>）。</p>
+</details>
+<h3 id="multiple-pymethods-功能现在需要-rust-162"><a class="header" href="#multiple-pymethods-功能现在需要-rust-162"><code>multiple-pymethods</code> 功能现在需要 Rust 1.62</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>由于 <code>multiple-pymethods</code> 功能所依赖的 <code>inventory</code> crate 存在限制，该功能现在需要 Rust 1.62。更多信息请参见 <a href="https://github.com/dtolnay/inventory/issues/32">dtolnay/inventory#32</a>。</p>
+</details>
+<h3 id="新增-impl-intopypypystring-for-str"><a class="header" href="#新增-impl-intopypypystring-for-str">新增 <code>impl IntoPy&lt;Py&lt;PyString&gt;&gt; for &amp;str</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>这可能会导致类型推断错误。</p>
+<p>以前：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>Python::with_gil(|py| {
+    // 无法推断是 `Py&lt;PyAny&gt;` 还是 `Py&lt;PyString&gt;`
+    let _test = "test".into_py(py);
+});
+<span class="boring">}</span></code></pre>
+<p>升级后，可能需要添加类型注解：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>Python::with_gil(|py| {
+    let _test: Py&lt;PyAny&gt; = "test".into_py(py);
+});
+<span class="boring">}</span></code></pre>
+</details>
+<h3 id="pyproto-功能现在默认禁用"><a class="header" href="#pyproto-功能现在默认禁用"><code>pyproto</code> 功能现在默认禁用</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>为将来移除已废弃的 <code>#[pyproto]</code> 属性宏做准备，该功能现在默认关闭，需通过手动启用功能标志来开启。这也为不使用该废弃宏的代码带来轻微的编译时间优化。</p>
+</details>
+<h3 id="pytypeobject-trait-已被废弃"><a class="header" href="#pytypeobject-trait-已被废弃"><code>PyTypeObject</code> trait 已被废弃</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><code>PyTypeObject</code> trait 此前几乎无用；几乎所有功能早已存在于 <code>PyTypeInfo</code> trait 上，而 <code>PyTypeObject</code> 对其仅有空白实现。在 PyO3 0.17 中，最后一个方法 <code>PyTypeObject::type_object</code> 已迁移到 <code>PyTypeInfo::type_object</code>。</p>
+<p>迁移方式是将 trait 边界和导入从 <code>PyTypeObject</code> 改为 <code>PyTypeInfo</code>。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore">use pyo3::Python;
+use pyo3::type_object::PyTypeObject;
+use pyo3::types::PyType;
+
+fn get_type_object&lt;T: PyTypeObject&gt;(py: Python&lt;'_&gt;) -&gt; &amp;PyType {
+    T::type_object(py)
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore">use pyo3::{Python, PyTypeInfo};
+use pyo3::types::PyType;
+
+fn get_type_object&lt;T: PyTypeInfo&gt;(py: Python&lt;'_&gt;) -&gt; &amp;PyType {
+    T::type_object(py)
+}
+
+<span class="boring">Python::with_gil(|py| { get_type_object::&lt;pyo3::types::PyList&gt;(py); });</span></code></pre>
+</details>
+<h3 id="implt-const-n-usize-intopypyobject-for-t-n-现在要求-t-intopy-而非-t-topyobject"><a class="header" href="#implt-const-n-usize-intopypyobject-for-t-n-现在要求-t-intopy-而非-t-topyobject"><code>impl&lt;T, const N: usize&gt; IntoPy&lt;PyObject&gt; for [T; N]</code> 现在要求 <code>T: IntoPy</code> 而非 <code>T: ToPyObject</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>如果这引发错误，只需为 <code>T</code> 实现 <code>IntoPy</code> 即可。由于 pyclass 已经实现了 <code>IntoPy</code>，你可能无需担心这一点。</p>
+</details>
+<h3 id="每个-pymodule-现在每个进程中只能初始化一次"><a class="header" href="#每个-pymodule-现在每个进程中只能初始化一次">每个 <code>#[pymodule]</code> 现在每个进程中只能初始化一次</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>为了让 PyO3 模块在存在 Python 子解释器时保持安全，目前必须明确禁用同一进程内多次初始化 <code>#[pymodule]</code> 的能力。尝试重复初始化现在会抛出 <code>ImportError</code>。</p>
+</details>
+<h2 id="从-015-升级到-016"><a class="header" href="#从-015-升级到-016">从 0.15.* 升级到 0.16</a></h2>
+<!-- rumdl-disable MD024 - same heading used above -->
+<h3 id="放弃对旧技术的支持"><a class="header" href="#放弃对旧技术的支持">放弃对旧技术的支持</a></h3>
+<!-- rumdl-enable MD024 -->
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 0.16 将最低 Rust 版本提升至 1.48，最低 Python 版本提升至 3.7。这使得项目可以使用更新的语言特性（支持 0.16 中的其他新增功能），并简化了维护工作。</p>
+</details>
+<h3 id="pyproto-已被废弃"><a class="header" href="#pyproto-已被废弃"><code>#[pyproto]</code> 已被废弃</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 0.15 中，<code>#[pymethods]</code> 属性宏增加了对实现“魔法方法”（如 <code>__str__</code>，又称“双下划线方法”）的支持。当时该实现尚未完全定型，仍有一些边界情况待决定，因此保留了原有的 <code>#[pyproto]</code> 属性宏以覆盖这些情况。</p>
+<p>在 PyO3 0.16 中，<code>#[pymethods]</code> 的实现已经完成，现已成为实现魔法方法的推荐方式。为了让 PyO3 项目持续发展，<code>#[pyproto]</code> 已被废弃（预计在 PyO3 0.18 中移除）。</p>
+<p>从 <code>#[pyproto]</code> 迁移到 <code>#[pymethods]</code> 很简单；在大多数情况下，只需将原有方法从 <code>#[pyproto]</code> trait 实现中直接复制到 <code>#[pymethods]</code> 块中即可。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">use pyo3::prelude::*;
+use pyo3::class::{PyObjectProtocol, PyIterProtocol};
+use pyo3::types::PyString;
+
+#[pyclass]
+struct MyClass {}
+
+#[pyproto]
+impl PyObjectProtocol for MyClass {
+    fn __str__(&amp;self) -&gt; &amp;'static [u8] {
+        b"hello, world"
+    }
+}
+
+#[pyproto]
+impl PyIterProtocol for MyClass {
+    fn __iter__(slf: PyRef&lt;self&gt;) -&gt; PyResult&lt;&amp;PyAny&gt; {
+        PyString::new(slf.py(), "hello, world").iter()
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust compile_fail">use pyo3::prelude::*;
+use pyo3::types::PyString;
+
+#[pyclass]
+struct MyClass {}
+
+#[pymethods]
+impl MyClass {
+    fn __str__(&amp;self) -&gt; &amp;'static [u8] {
+        b"hello, world"
+    }
+
+    fn __iter__(slf: PyRef&lt;self&gt;) -&gt; PyResult&lt;&amp;PyAny&gt; {
+        PyString::new(slf.py(), "hello, world").iter()
+    }
+}</code></pre>
+</details>
+<h3 id="移除了对象包装器的-partialeq-实现"><a class="header" href="#移除了对象包装器的-partialeq-实现">移除了对象包装器的 <code>PartialEq</code> 实现</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>Python 对象包装器 <code>Py</code> 和 <code>PyAny</code> 原先实现了 <code>PartialEq</code>，使得 <code>object_a == object_b</code> 对应于 Python 中的 <code>is</code> 操作符（指针相等性判断），而非 <code>==</code> 操作符。此行为已被移除，取而代之的是新方法：应使用 <code>object_a.is(object_b)</code>。</p>
+<p>这一更改还有一个优势：不再要求 <code>object_a</code> 和 <code>object_b</code> 具有相同的包装类型，你现在可以直接比较 <code>Py&lt;T&gt;</code> 和 <code>&amp;PyAny</code>，而无需转换。</p>
+<p>若要检查 Python 对象的相等性（即 Python 的 <code>==</code> 操作符），请使用新方法 <code>eq()</code>。</p>
+</details>
+<h3 id="容器魔法方法现在与-python-行为一致"><a class="header" href="#容器魔法方法现在与-python-行为一致">容器魔法方法现在与 Python 行为一致</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 0.15 中，<code>#[pymethods]</code> 中的 <code>__getitem__</code>、<code>__setitem__</code> 和 <code>__delitem__</code> 只会为 <code>#[pyclass]</code> 生成<strong>映射（mapping）</strong> 的实现。为了与 Python 行为一致，这些方法现在会同时生成<strong>映射（mapping）</strong> 和<strong>序列（sequence）</strong> 的实现。</p>
+<p>这意味着实现了这些 <code>#[pymethods]</code> 的类现在也会被视为序列，就像原生 Python <code>class</code> 一样。这可能导致一些细微的行为差异：</p>
+<ul>
+<li>PyO3 允许将这些类的实例转换为 <code>PySequence</code> 和 <code>PyMapping</code>。</li>
+<li>Python 会为这类类提供默认的 <code>__iter__</code> 实现（如果类本身未定义），该实现会反复调用 <code>__getitem__</code> 并传入整数索引（从 0 开始），直到抛出 <code>IndexError</code> 为止。</li>
+</ul>
+<p>详细说明如下，考虑以下 Python 类：</p>
+<pre><code class="language-python">class ExampleContainer:
+
+    def __len__(self):
+        return 5
+
+    def __getitem__(self, idx: int) -&gt; int:
+        if idx &lt; 0 or idx &gt; 5:
+            raise IndexError()
+        return idx
+</code></pre>
+<p>该类实现了一个 Python <a href="https://docs.python.org/3/glossary.html#term-sequence">序列</a>。</p>
+<p><code>__len__</code> 和 <code>__getitem__</code> 也可用于实现 Python <a href="https://docs.python.org/3/glossary.html#term-mapping">映射</a>。在 Python C-API 中，这些方法并不共享：序列的 <code>__len__</code> 和 <code>__getitem__</code> 由 <code>sq_length</code> 和 <code>sq_item</code> 槽位定义，而映射对应的则是 <code>mp_length</code> 和 <code>mp_subscript</code>。<code>__setitem__</code> 和 <code>__delitem__</code> 也有类似的区分。</p>
+</details>因为 Python 中没有这样的区分，实现这些方法会同时填充映射（mapping）和序列（sequence）的槽位。例如，一个实现了 `__len__` 的 Python 类将同时填充 `sq_length` 和 `mp_length` 槽位。
+<p>PyO3 在 0.16 版本中的默认行为已更接近于这种 Python 行为。</p>
+
+<h3 id="wrap_pymodule-和-wrap_pyfunction-现在正确地遵循可见性规则"><a class="header" href="#wrap_pymodule-和-wrap_pyfunction-现在正确地遵循可见性规则"><code>wrap_pymodule!</code> 和 <code>wrap_pyfunction!</code> 现在正确地遵循可见性规则</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 0.16 之前，<code>wrap_pymodule!</code> 和 <code>wrap_pyfunction!</code> 宏可以使用那些根据 Rust 可见性规则无法访问的模块和函数。</p>
+<p>例如，以下代码在 0.16 版本之前是合法的，但从 0.16 开始会被拒绝，因为 <code>wrap_pymodule!</code> 宏无法访问 <code>private_submodule</code> 函数：</p>
+<pre><code class="language-rust compile_fail">mod foo {
+    use pyo3::prelude::*;
+
+    #[pymodule]
+    fn private_submodule(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+        Ok(())
+    }
+}
+
+use pyo3::prelude::*;
+use foo::*;
+
+#[pymodule]
+fn my_module(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_wrapped(wrap_pymodule!(private_submodule))?;
+    Ok(())
+}</code></pre>
+<p>要修复此问题，请使私有子模块可见，例如使用 <code>pub</code> 或 <code>pub(crate)</code>。</p>
+<pre><code class="language-rust ignore">mod foo {
+    use pyo3::prelude::*;
+
+    #[pymodule]
+    pub(crate) fn private_submodule(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+        Ok(())
+    }
+}
+
+use pyo3::prelude::*;
+use pyo3::wrap_pymodule;
+use foo::*;
+
+#[pymodule]
+fn my_module(_py: Python&lt;'_&gt;, m: &amp;PyModule) -&gt; PyResult&lt;()&gt; {
+    m.add_wrapped(wrap_pymodule!(private_submodule))?;
+    Ok(())
+}</code></pre>
+</details>
+<h2 id="从-014-升级到-015"><a class="header" href="#从-014-升级到-015">从 0.14.* 升级到 0.15</a></h2>
+<h3 id="序列索引的变更"><a class="header" href="#序列索引的变更">序列索引的变更</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>对于所有接受序列索引的类型（<code>PyList</code>、<code>PyTuple</code> 和 <code>PySequence</code>），API 已统一为仅接受 <code>usize</code> 类型的索引，以符合 Rust 的索引惯例。之前即使在支持 <code>isize</code> 的 API 中也仅部分支持负数索引，现在这些 API 均不再支持负数索引。</p>
+<p>此外，<code>get_item</code> 方法现在在索引无效时总是返回 <code>PyResult</code>，而不再引发 panic。<code>Index</code> trait 已被实现，提供了与 Rust 向量相同的 panic 行为。</p>
+<p>请注意，<em>切片</em> 索引（如 <code>PySequence::get_slice</code> 等方法所接受）仍继承 Python 的行为：索引会被限制在实际长度范围内，超出范围也不会 panic 或返回错误。</p>
+<p>对这些类型采用 Rust 的索引约定的另一个好处是，它们现在也可以作为统一 API 的一部分，支持 Rust 的索引操作符：</p>
+<pre><code class="language-rust ignore">#![allow(deprecated)]
+use pyo3::{Python, types::PyList};
+
+Python::with_gil(|py| {
+    let list = PyList::new(py, &amp;[1, 2, 3]);
+    assert_eq!(list[0..2].to_string(), "[1, 2]");
+});</code></pre>
+</details>
+<h2 id="从-013-升级到-014"><a class="header" href="#从-013-升级到-014">从 0.13.* 升级到 0.14</a></h2>
+<h3 id="auto-initialize-功能现在需要显式启用"><a class="header" href="#auto-initialize-功能现在需要显式启用"><code>auto-initialize</code> 功能现在需要显式启用</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>对于在 Rust 中嵌入 Python 的项目，除非启用了 <a href="features.html#auto-initialize"><code>auto-initialize</code> 功能</a>，否则 PyO3 不再在首次调用 <code>Python::with_gil</code>（或 <code>Python::acquire_gil</code>）时自动初始化 Python 解释器。</p>
+</details>
+<h3 id="新增-multiple-pymethods-功能"><a class="header" href="#新增-multiple-pymethods-功能">新增 <code>multiple-pymethods</code> 功能</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><code>#[pymethods]</code> 已经过重构，采用更简单的默认实现，移除了对 <code>inventory</code> crate 的依赖。这减少了大多数用户的依赖项和编译时间。</p>
+<p>新默认实现的限制是无法支持同一 <code>#[pyclass]</code> 有多个 <code>#[pymethods]</code> 块。如果需要该功能，必须启用 <code>multiple-pymethods</code> 功能，以切换回基于 <code>inventory</code> 的实现。</p>
+</details>
+<h3 id="已弃用的-pyproto-方法"><a class="header" href="#已弃用的-pyproto-方法">已弃用的 <code>#[pyproto]</code> 方法</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>一些协议方法（即 <code>__dunder__</code> 方法），例如 <code>__bytes__</code> 和 <code>__format__</code>，长期以来可以通过两种方式在 PyO3 中实现：使用 <code>#[pyproto]</code>（例如本处列出的方法对应的 <code>PyObjectProtocol</code>），或直接在 <code>#[pymethods]</code> 中编写。但这种情况仅适用于少数几个 <code>#[pyproto]</code> 方法（由于 PyO3 当前与 Python C API 交互的技术原因）。</p>
+<p>为了坚持“一种明确的方法做一件事”的原则，这些方法的 <code>#[pyproto]</code> 形式已被弃用。</p>
+<p>迁移方法是将受影响的方法从 <code>#[pyproto]</code> 块移至 <code>#[pymethods]</code> 块即可。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">use pyo3::prelude::*;
+use pyo3::class::basic::PyObjectProtocol;
+
+#[pyclass]
+struct MyClass {}
+
+#[pyproto]
+impl PyObjectProtocol for MyClass {
+    fn __bytes__(&amp;self) -&gt; &amp;'static [u8] {
+        b"hello, world"
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run">use pyo3::prelude::*;
+
+#[pyclass]
+struct MyClass {}
+
+#[pymethods]
+impl MyClass {
+    fn __bytes__(&amp;self) -&gt; &amp;'static [u8] {
+        b"hello, world"
+    }
+}</code></pre>
+</details>
+<h2 id="从-012-升级到-013"><a class="header" href="#从-012-升级到-013">从 0.12.* 升级到 0.13</a></h2>
+<h3 id="最低-rust-版本升级至-rust-145"><a class="header" href="#最低-rust-版本升级至-rust-145">最低 Rust 版本升级至 Rust 1.45</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 <code>0.13</code> 使用了在 Rust 1.40 至 1.45 之间稳定的新 Rust 语言特性。如果你使用的 Rust 编译器早于 1.45 版本，则必须更新工具链才能继续使用 PyO3。</p>
+</details>
+<h3 id="运行时变更以支持-cpython-有限-api"><a class="header" href="#运行时变更以支持-cpython-有限-api">运行时变更以支持 CPython 有限 API</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 <code>0.13</code> 中增加了对编译 CPython 有限 API 的支持。这对所有 PyO3 用户都产生了一些影响，具体如下。</p>
+<p>其中最大的一点是，所有由 PyO3 创建的类型现在都是 CPython 所称的“堆类型”（heap types）。其具体影响包括：</p>
+<ul>
+<li>如果你想从 Rust 子类化这些类型，必须使用 <code>#[pyclass(subclass)]</code> 标记它们，就像你想允许从 Python 代码中子类化它们一样。</li>
+<li>类型对象现在是可变的——Python 代码可以为其设置属性。</li>
+<li>对于未使用 <code>#[pyclass(module="mymodule")]</code> 的类型，其 <code>__module__</code> 不再返回 <code>builtins</code>，而是会引发 <code>AttributeError</code>。</li>
+</ul>
+</details>
+<h2 id="从-011-升级到-012"><a class="header" href="#从-011-升级到-012">从 0.11.* 升级到 0.12</a></h2>
+<h3 id="pyerr-已经过重构"><a class="header" href="#pyerr-已经过重构"><code>PyErr</code> 已经过重构</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>在 PyO3 <code>0.12</code> 中，<code>PyErr</code> 类型被重新实现，以更好地与标准 Rust 错误处理生态系统兼容。具体而言，<code>PyErr</code> 现在实现了 <code>Error + Send + Sync</code>，这是 Rust 中错误类型的标准 trait。</p>
+<p>尽管这导致一些 API 被移除，但新的 <code>PyErr</code> 类型现在应该更容易使用。以下部分详细列出了变更内容以及如何迁移到新 API。</p>
+</details>
+<h4 id="pyerrnew-和-pyerrfrom_type-现在要求其参数实现-send--sync"><a class="header" href="#pyerrnew-和-pyerrfrom_type-现在要求其参数实现-send--sync"><code>PyErr::new</code> 和 <code>PyErr::from_type</code> 现在要求其参数实现 <code>Send + Sync</code></a></h4>
+<details>
+<summary><small>点击展开</small></summary>
+<p>对大多数使用场景而言无需修改。如果你尝试用一个不满足 <code>Send + Sync</code> 的值构造 <code>PyErr</code>，你需要先创建 Python 对象，然后使用 <code>PyErr::from_instance</code>。</p>
+<p>类似地，任何实现了 <code>PyErrArguments</code> 的类型现在也必须满足 <code>Send + Sync</code>。</p>
+</details>
+<h4 id="pyerr-的内部字段现在为私有"><a class="header" href="#pyerr-的内部字段现在为私有"><code>PyErr</code> 的内部字段现在为私有</a></h4>
+<details>
+<summary><small>点击展开</small></summary>
+<p>不再允许直接访问 <code>PyErr</code> 的 <code>.ptype</code>、<code>.pvalue</code> 和 <code>.ptraceback</code> 字段。你应该改用新的方法 <code>PyErr::ptype</code>、<code>PyErr::pvalue</code> 和 <code>PyErr::ptraceback</code>。</p>
+</details>
+<h4 id="pyerrvalue-和-pyerrfrom_value-已被移除"><a class="header" href="#pyerrvalue-和-pyerrfrom_value-已被移除"><code>PyErrValue</code> 和 <code>PyErr::from_value</code> 已被移除</a></h4>
+<details>
+<summary><small>点击展开</small></summary>
+<p>由于这些 API 属于已被重构的 <code>PyErr</code> 内部机制，因此不再存在。</p>
+<p>如果你曾使用这些 API，建议改用 <code>PyException::new_err</code>（见 <a href="#exception-types-have-been-reworked">异常类型重构部分</a>）。</p>
+</details>
+<h4 id="移除了-pyerr-到-pyresultt-的-into-实现"><a class="header" href="#移除了-pyerr-到-pyresultt-的-into-实现">移除了 <code>PyErr</code> 到 <code>PyResult&lt;T&gt;</code> 的 <code>Into</code> 实现</a></h4>
+<details>
+<summar y=""><small>点击展开</small>
+<p>该实现是冗余的。请直接构造 <code>Result::Err</code> 变体即可。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">let result: PyResult&lt;()&gt; = PyErr::new::&lt;TypeError, _&gt;("error message").into();</code></pre>
+<p>之后（同时使用重构后的异常类型；见下一部分）：</p>
+<pre><code class="language-rust no_run"><span class="boring">use pyo3::{PyResult, exceptions::PyTypeError};
+</span>let result: PyResult&lt;()&gt; = Err(PyTypeError::new_err("error message"));</code></pre>
+
+<h3 id="异常类型已重构"><a class="header" href="#异常类型已重构">异常类型已重构</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>以前异常类型是零大小的标记类型，仅用于构造 <code>PyErr</code>。在 PyO3 0.12 中，这些类型已被替换为完整定义，可以像 <code>PyAny</code>、<code>PyDict</code> 等一样使用。这使得能够与 Python 异常对象进行交互。</p>
+<p>新类型的名称均以 “Py” 为前缀。例如，之前：</p>
+<pre><code class="language-rust ignore">let err: PyErr = TypeError::py_err("error message");</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::{PyErr, PyResult, Python, type_object::PyTypeObject};
+</span><span class="boring">use pyo3::exceptions::{PyBaseException, PyTypeError};
+</span><span class="boring">Python::with_gil(|py| -&gt; PyResult&lt;()&gt; {
+</span>let err: PyErr = PyTypeError::new_err("error message");
+
+// 使用 PyErr 的 Display 特性，PyO3 0.12 的新功能
+assert_eq!(err.to_string(), "TypeError: error message");
+
+// 现在可以与异常实例交互，PyO3 0.12 的新功能
+let instance: &amp;PyBaseException = err.instance(py);
+assert_eq!(
+    instance.getattr("__class__")?,
+    PyTypeError::type_object(py).as_ref()
+);
+<span class="boring">Ok(())
+</span><span class="boring">}).unwrap();</span></code></pre>
+</details>
+<h3 id="frompy-已被移除"><a class="header" href="#frompy-已被移除"><code>FromPy</code> 已被移除</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>为了简化 PyO3 的转换 trait，<code>FromPy</code> trait 已被移除。以前有两种方式定义类型的转 Python 转换：<code>FromPy&lt;T&gt; for PyObject</code> 和 <code>IntoPy&lt;PyObject&gt; for T</code>。</p>
+<p>现在定义转换的唯一方式是 <code>IntoPy</code>，因此下游 crate 可能需要相应调整。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">use pyo3::prelude::*;
+</span>struct MyPyObjectWrapper(PyObject);
+
+
+impl FromPy&lt;MyPyObjectWrapper&gt; for PyObject {
+    fn from_py(other: MyPyObjectWrapper, _py: Python&lt;'_&gt;) -&gt; Self {
+        other.0
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[allow(dead_code)]
+</span>struct MyPyObjectWrapper(PyObject);
+
+
+<span class="boring">#[allow(deprecated)]
+</span>impl IntoPy&lt;PyObject&gt; for MyPyObjectWrapper {
+    fn into_py(self, _py: Python&lt;'_&gt;) -&gt; PyObject {
+        self.0
+    }
+}</code></pre>
+<p>同样，使用 <code>FromPy</code> trait 的代码可以轻松重写为使用 <code>IntoPy</code>。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj = PyObject::from_py(1.234, py);
+<span class="boring">})</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(deprecated)]
+</span><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj: PyObject = 1.234.into_py(py);
+<span class="boring">})</span></code></pre>
+</details>
+<h3 id="pyobject-现在是-pypyany-的类型别名"><a class="header" href="#pyobject-现在是-pypyany-的类型别名"><code>PyObject</code> 现在是 <code>Py&lt;PyAny&gt;</code> 的类型别名</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>从使用角度来看，这一改动影响极小。如果你曾为 <code>PyObject</code> 和 <code>Py&lt;T&gt;</code> 都实现了 trait，现在可能只需要移除 <code>PyObject</code> 的实现即可。</p>
+</details>
+<h3 id="aspyref-已被移除"><a class="header" href="#aspyref-已被移除"><code>AsPyRef</code> 已被移除</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>由于 <code>PyObject</code> 现在只是一个类型别名，<code>AsPyRef</code> 唯一剩下的实现者是 <code>Py&lt;T&gt;</code>。因此不再需要该 trait，<code>AsPyRef::as_ref</code> 方法已直接移至 <code>Py::as_ref</code>。</p>
+<p>除了移除未使用 <code>pyo3::prelude::*</code> 的代码中的 <code>use pyo3::AsPyRef</code> 外，应无需其他代码修改。</p>
+<p>之前：</p>
+<pre><code class="language-rust ignore">use pyo3::{AsPyRef, Py, types::PyList};
+<span class="boring">pyo3::Python::with_gil(|py| {
+</span>let list_py: Py&lt;PyList&gt; = PyList::empty(py).into();
+let list_ref: &amp;PyList = list_py.as_ref(py);
+<span class="boring">})</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore">use pyo3::{Py, types::PyList};
+<span class="boring">pyo3::Python::with_gil(|py| {
+</span>let list_py: Py&lt;PyList&gt; = PyList::empty(py).into();
+let list_ref: &amp;PyList = list_py.as_ref(py);
+<span class="boring">})</span></code></pre>
+</details>
+<h2 id="从-010-升级到-011"><a class="header" href="#从-010-升级到-011">从 0.10.* 升级到 0.11</a></h2>
+<h3 id="稳定版-rust"><a class="header" href="#稳定版-rust">稳定版 Rust</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 现在支持稳定的 Rust 工具链。最低要求版本为 1.39.0。</p>
+</details>
+<h3 id="pyclass-结构体现在必须是-send-或标记为-unsendable"><a class="header" href="#pyclass-结构体现在必须是-send-或标记为-unsendable"><code>#[pyclass]</code> 结构体现在必须是 <code>Send</code> 或标记为 <code>unsendable</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>由于 Python 解释器可以在线程间传递 <code>#[pyclass]</code> 结构体，它们必须实现 <code>Send</code> 或被声明为 <code>unsendable</code>（通过 <code>#[pyclass(unsendable)]</code>）。注意 <code>unsendable</code> 是在 PyO3 <code>0.11.1</code> 中添加的，在 PyO3 <code>0.11.0</code> 中始终要求 <code>Send</code>。</p>
+<p>这可能会“破坏”一些之前可以编译但实际上是不安全的代码。有两种修复方式：</p>
+<ol>
+<li>
+<p>如果你认为你的 <code>#[pyclass]</code> 确实应该是可 <code>Send</code> 的，请实现 <code>Send</code>。一种常见且更安全的方法是使用线程安全类型。例如，用 <code>Arc</code> 替代 <code>Rc</code>，用 <code>Mutex</code> 替代 <code>RefCell</code>，用 <code>Box&lt;dyn Send + T&gt;</code> 替代 <code>Box&lt;dyn T&gt;</code>。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">use pyo3::prelude::*;
+use std::rc::Rc;
+use std::cell::RefCell;
+
+#[pyclass]
+struct NotThreadSafe {
+    shared_bools: Rc&lt;RefCell&lt;Vec&lt;bool&gt;&gt;&gt;,
+    closure: Box&lt;dyn Fn()&gt;,
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">#![allow(dead_code)]
+</span>use pyo3::prelude::*;
+use std::sync::{Arc, Mutex};
+
+#[pyclass]
+struct ThreadSafe {
+    shared_bools: Arc&lt;Mutex&lt;Vec&lt;bool&gt;&gt;&gt;,
+    closure: Box&lt;dyn Fn() + Send&gt;,
+}</code></pre>
+<p>如果你无法更改 <code>#[pyclass]</code> 以自动实现 <code>Send</code>（例如，当它包含裸指针时），可以使用 <code>unsafe impl Send</code>。在这种情况下，需确保结构体实际上是线程安全的。更多信息请参见 <a href="https://doc.rust-lang.org/nomicon/send-and-sync.html">the Rustonomicon</a>。</p>
+</li>
+<li>
+<p>如果你认为你的 <code>#[pyclass]</code> 不应被其他线程访问，可以使用 <code>unsendable</code> 标志。标记为 <code>unsendable</code> 的类在被其他线程访问时会 panic，从而使向 Python 解释器暴露不可发送对象是线程安全的。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">use pyo3::prelude::*;
+
+#[pyclass]
+struct Unsendable {
+    pointers: Vec&lt;*mut std::ffi::c_char&gt;,
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">#![allow(dead_code)]
+</span>use pyo3::prelude::*;
+
+#[pyclass(unsendable)]
+struct Unsendable {
+    pointers: Vec&lt;*mut std::ffi::c_char&gt;,
+}</code></pre>
+</li>
+</ol>
+</details>
+<h3 id="所有-pyobject-和-pyt-方法现在都需要-python-作为参数"><a class="header" href="#所有-pyobject-和-pyt-方法现在都需要-python-作为参数">所有 <code>PyObject</code> 和 <code>Py&lt;T&gt;</code> 方法现在都需要 <code>Python</code> 作为参数</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>以前，一些方法如 <code>Object::get_refcnt</code> 不需要 <code>Python</code> 参数（以确保当前线程持有 Python GIL）。从技术上讲，这是不安全的。迁移时，只需将 <code>py</code> 参数传递给这些方法的调用即可。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">pyo3::Python::attach(|py| {
+</span>py.None().get_refcnt();
+<span class="boring">})</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust"><span class="boring">pyo3::Python::attach(|py| {
+</span>py.None().get_refcnt(py);
+<span class="boring">})</span></code></pre>
+</details>
+<h2 id="从-09-升级到-010"><a class="header" href="#从-09-升级到-010">从 0.9.* 升级到 0.10</a></h2>
+<h3 id="objectprotocol-已移除"><a class="header" href="#objectprotocol-已移除"><code>ObjectProtocol</code> 已移除</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>所有方法都已移至 <a href="{{#PYO3_DOCS_URL}}/pyo3/types/struct.PyAny.html"><code>PyAny</code></a>。并且由于现在所有原生类型（例如 <code>PyList</code>）都实现了 <code>Deref&lt;Target=PyAny&gt;</code>，你只需从代码中移除 <code>ObjectProtocol</code> 即可。如果你通过 <code>use pyo3::prelude::*</code> 使用 <code>ObjectProtocol</code>，则无需任何更改。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail ignore">use pyo3::ObjectProtocol;
+
+<span class="boring">pyo3::Python::with_gil(|py| {
+</span>let obj = py.eval("lambda: 'Hi :)'", None, None).unwrap();
+let hi: &amp;pyo3::types::PyString = obj.call0().unwrap().downcast().unwrap();
+assert_eq!(hi.len().unwrap(), 5);
+<span class="boring">})</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">pyo3::Python::with_gil(|py| {
+</span>let obj = py.eval("lambda: 'Hi :)'", None, None).unwrap();
+let hi: &amp;pyo3::types::PyString = obj.call0().unwrap().downcast().unwrap();
+assert_eq!(hi.len().unwrap(), 5);
+<span class="boring">})</span></code></pre>
+</details>
+<h3 id="用户代码中不再需要-featurespecialization"><a class="header" href="#用户代码中不再需要-featurespecialization">用户代码中不再需要 <code>#![feature(specialization)]</code></a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>虽然 PyO3 本身仍需要 specialization 和 nightly Rust，但现在你的 crate 中不再需要使用 <code>#![feature(specialization)]</code>。</p>
+</details>
+<h2 id="从-08-升级到-09"><a class="header" href="#从-08-升级到-09">从 0.8.* 升级到 0.9</a></h2>
+<h3 id="new-接口"><a class="header" href="#new-接口"><code>#[new]</code> 接口</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p><a href="https://docs.rs/pyo3/0.8.5/pyo3/type_object/struct.PyRawObject.html"><code>PyRawObject</code></a> 已被移除，我们的构造函数语法已更改。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail">#[pyclass]
+struct MyClass {}
+
+#[pymethods]
+impl MyClass {
+    #[new]
+    fn new(obj: &amp;PyRawObject) {
+        obj.init(MyClass {})
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust no_run"><span class="boring">use pyo3::prelude::*;
+</span>#[pyclass]
+struct MyClass {}
+
+#[pymethods]
+impl MyClass {
+    #[new]
+    fn new() -&gt; Self {
+        MyClass {}
+    }
+}</code></pre>
+<p>基本上你可以直接返回 <code>Self</code> 或 <code>Result&lt;Self&gt;</code>。更多信息请参见本指南的<a href="class.html#constructor">构造函数章节</a>。</p>
+</details>
+<h3 id="pycell"><a class="header" href="#pycell">PyCell</a></h3>
+<details>
+<summary><small>点击展开</small></summary>
+<p>PyO3 0.9 引入了 <code>PyCell</code>，这是一个类似于 <a href="https://doc.rust-lang.org/std/cell/struct.RefCell.html"><code>RefCell</code></a> 的对象包装器，用于确保 Rust 关于引用别名的规则得以遵守。更多细节请参见 <a href="https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#the-rules-of-references">Rust 书籍中关于引用规则的部分</a></p>
+<p>对于 <code>#[pymethods]</code> 或 <code>#[pyfunction]</code>，现有代码应无需更改即可继续工作。当你的函数使用方式违反了 Rust 的引用规则时，会自动引发 Python 异常。</p>
+<p>示例如下：</p>
+<pre><code class="language-rust"><span class="boring">use pyo3::prelude::*;
+</span>
+#[pyclass]
+struct Names {
+    names: Vec&lt;String&gt;,
+}
+
+#[pymethods]
+impl Names {
+    #[new]
+    fn new() -&gt; Self {
+        Names { names: vec![] }
+    }
+    fn merge(&amp;mut self, other: &amp;mut Names) {
+        self.names.append(&amp;mut other.names)
+    }
+}
+<span class="boring">Python::attach(|py| {
+</span><span class="boring">    let names = Py::new(py, Names::new()).unwrap();
+</span><span class="boring">    pyo3::py_run!(py, names, r"
+</span><span class="boring">    try:
+</span><span class="boring">       names.merge(names)
+</span><span class="boring">       assert False, 'Unreachable'
+</span><span class="boring">    except RuntimeError as e:
+</span><span class="boring">       assert str(e) == 'Already borrowed'
+</span><span class="boring">    ");
+</span><span class="boring">})</span></code></pre>
+<p><code>Names</code> 有一个 <code>merge</code> 方法，它接受 <code>&amp;mut self</code> 和另一个 <code>&amp;mut Self</code> 类型的参数。给定此 <code>#[pyclass]</code>，在 Python 中调用 <code>names.merge(names)</code> 会引发 <a href="{{#PYO3_DOCS_URL}}/pyo3/pycell/struct.PyBorrowMutError.html"><code>PyBorrowMutError</code></a> 异常，因为它需要对 <code>names</code> 进行两次可变借用。</p>
+<p>然而，对于 <code>#[pyproto]</code> 和某些函数，你需要手动修复代码。</p>
+<h4 id="对象创建"><a class="header" href="#对象创建">对象创建</a></h4>
+<p>在 0.8 版中，对象创建使用 <code>PyRef::new</code> 和 <code>PyRefMut::new</code>。在 0.9 版中，两者都已移除。要升级代码，请改用 <code>PyCell::new</code>。如果你需要 <a href="{{#PYO3_DOCS_URL}}/pyo3/pycell/struct.PyRef.html"><code>PyRef</code></a> 或 <a href="{{#PYO3_DOCS_URL}}/pyo3/pycell/struct.PyRef.html"><code>PyRefMut</code></a>，只需在新创建的 <code>PyCell</code> 上调用 <code>.borrow()</code> 或 <code>.borrow_mut()</code>。</p>
+<p>之前：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[pyclass]
+</span><span class="boring">struct MyClass {}
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj_ref = PyRef::new(py, MyClass {}).unwrap();
+<span class="boring">})</span></code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">#[pyclass]
+</span><span class="boring">struct MyClass {}
+</span><span class="boring">Python::with_gil(|py| {
+</span>let obj = PyCell::new(py, MyClass {}).unwrap();
+let obj_ref = obj.borrow();
+<span class="boring">})</span></code></pre>
+<h4 id="对象提取"><a class="header" href="#对象提取">对象提取</a></h4>
+<p>对于 <code>PyClass</code> 类型 <code>T</code>，<code>&amp;T</code> 和 <code>&amp;mut T</code> 不再具有 <a href="{{#PYO3_DOCS_URL}}/pyo3/conversion/trait.FromPyObject.html"><code>FromPyObject</code></a> 的实现。你应该分别提取 <code>PyRef&lt;T&gt;</code> 或 <code>PyRefMut&lt;T&gt;</code>。如果 <code>T</code> 实现了 <code>Clone</code>，你可以直接提取 <code>T</code> 本身。此外，你也可以提取 <code>&amp;PyCell&lt;T&gt;</code>，尽管这种情况很少需要。</p>
+<p>之前：</p>
+<pre><code class="language-compile_fail">let obj: &amp;PyAny = create_obj();
+let obj_ref: &amp;MyClass = obj.extract().unwrap();
+let obj_ref_mut: &amp;mut MyClass = obj.extract().unwrap();
+</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust ignore"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::types::IntoPyDict;
+</span><span class="boring">#[pyclass] #[derive(Clone)] struct MyClass {}
+</span><span class="boring">#[pymethods] impl MyClass { #[new]fn new() -&gt; Self { MyClass {} }}
+</span><span class="boring">Python::with_gil(|py| {
+</span><span class="boring">let typeobj = py.get_type::&lt;MyClass&gt;();
+</span><span class="boring">let d = [("c", typeobj)].into_py_dict(py);
+</span><span class="boring">let create_obj = || py.eval("c()", None, Some(d)).unwrap();
+</span>let obj: &amp;PyAny = create_obj();
+let obj_cell: &amp;PyCell&lt;MyClass&gt; = obj.extract().unwrap();
+let obj_cloned: MyClass = obj.extract().unwrap(); // 通过克隆对象提取
+{
+    let obj_ref: PyRef&lt;'_, MyClass&gt; = obj.extract().unwrap();
+    // 由于 Rust 的引用规则，我们需要在提取 PyRefMut 之前先释放 obj_ref
+}
+let obj_ref_mut: PyRefMut&lt;'_, MyClass&gt; = obj.extract().unwrap();
+<span class="boring">})
+</span>```#### `#[pyproto]`
+
+`#[pyproto]` 实现中的大多数方法参数都需要实现 [`FromPyObject`]。
+因此，如果您的协议方法接受 `&amp;T` 或 `&amp;mut T`（其中 `T: PyClass`），请改用 [`PyRef`] 或 [`PyRefMut`]。
+
+之前：
+
+```rust,compile_fail
+<span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::class::PySequenceProtocol;
+</span>#[pyclass]
+struct ByteSequence {
+    elements: Vec&lt;u8&gt;,
+}
+#[pyproto]
+impl PySequenceProtocol for ByteSequence {
+    fn __concat__(&amp;self, other: &amp;Self) -&gt; PyResult&lt;Self&gt; {
+        let mut elements = self.elements.clone();
+        elements.extend_from_slice(&amp;other.elements);
+        Ok(Self { elements })
+    }
+}</code></pre>
+<p>之后：</p>
+<pre><code class="language-rust compile_fail"><span class="boring">use pyo3::prelude::*;
+</span><span class="boring">use pyo3::class::PySequenceProtocol;
+</span>#[pyclass]
+struct ByteSequence {
+    elements: Vec&lt;u8&gt;,
+}
+#[pyproto]
+impl PySequenceProtocol for ByteSequence {
+    fn __concat__(&amp;self, other: PyRef&lt;'p, Self&gt;) -&gt; PyResult&lt;Self&gt; {
+        let mut elements = self.elements.clone();
+        elements.extend_from_slice(&amp;other.elements);
+        Ok(Self { elements })
+    }
+}</code></pre>
+</details>
+<style>
+    /* 立即在 h3 标题下方渲染 details */
+    h3:has(+ details) {
+        margin-bottom: 0;
+    }
+
+    /* 让 summary 文本提示其可点击，并通过向下填充增加可点击区域 */
+    details > summary {
+        cursor: pointer;
+        padding-bottom: 0.5em;
+    }
+
+    /* 减少紧接在可点击区域下方段落的上边距，以避免大空白 */
+    details > summary + p {
+        margin-block-start: 0.5em;
+    }
+
+    /* 稍微紧凑地排列未展开状态下的相邻标题 */
+    h3 + details:not([open]) + h3 {
+        margin-top: 1.5em;
+    }
+</style>
+</summar></details></pybackedstr></t></t></details>
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="faq.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                            </a>
+
+                            <a rel="next prefetch" href="trait-bounds.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="faq.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg></span>
+                    </a>
+
+                    <a rel="next prefetch" href="trait-bounds.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M278.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-160 160c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L210.7 256 73.4 118.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l160 160z"/></svg></span>
+                    </a>
+            </nav>
+
+        </div>
+
+        <template id=fa-eye><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M288 32c-80.8 0-145.5 36.8-192.6 80.6C48.6 156 17.3 208 2.5 243.7c-3.3 7.9-3.3 16.7 0 24.6C17.3 304 48.6 356 95.4 399.4C142.5 443.2 207.2 480 288 480s145.5-36.8 192.6-80.6c46.8-43.5 78.1-95.4 93-131.1c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C433.5 68.8 368.8 32 288 32zM432 256c0 79.5-64.5 144-144 144s-144-64.5-144-144s64.5-144 144-144s144 64.5 144 144zM288 192c0 35.3-28.7 64-64 64c-11.5 0-22.3-3-31.6-8.4c-.2 2.8-.4 5.5-.4 8.4c0 53 43 96 96 96s96-43 96-96s-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6z"/></svg></span></template>
+        <template id=fa-eye-slash><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M38.8 5.1C28.4-3.1 13.3-1.2 5.1 9.2S-1.2 34.7 9.2 42.9l592 464c10.4 8.2 25.5 6.3 33.7-4.1s6.3-25.5-4.1-33.7L525.6 386.7c39.6-40.6 66.4-86.1 79.9-118.4c3.3-7.9 3.3-16.7 0-24.6c-14.9-35.7-46.2-87.7-93-131.1C465.5 68.8 400.8 32 320 32c-68.2 0-125 26.3-169.3 60.8L38.8 5.1zM223.1 149.5C248.6 126.2 282.7 112 320 112c79.5 0 144 64.5 144 144c0 24.9-6.3 48.3-17.4 68.7L408 294.5c5.2-11.8 8-24.8 8-38.5c0-53-43-96-96-96c-2.8 0-5.6 .1-8.4 .4c5.3 9.3 8.4 20.1 8.4 31.6c0 10.2-2.4 19.8-6.6 28.3l-90.3-70.8zm223.1 298L373 389.9c-16.4 6.5-34.3 10.1-53 10.1c-79.5 0-144-64.5-144-144c0-6.9 .5-13.6 1.4-20.2L83.1 161.5C60.3 191.2 44 220.8 34.5 243.7c-3.3 7.9-3.3 16.7 0 24.6c14.9 35.7 46.2 87.7 93 131.1C174.5 443.2 239.2 480 320 480c47.8 0 89.9-12.9 126.2-32.5z"/></svg></span></template>
+        <template id=fa-copy><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M502.6 70.63l-61.25-61.25C435.4 3.371 427.2 0 418.7 0H255.1c-35.35 0-64 28.66-64 64l.0195 256C192 355.4 220.7 384 256 384h192c35.2 0 64-28.8 64-64V93.25C512 84.77 508.6 76.63 502.6 70.63zM464 320c0 8.836-7.164 16-16 16H255.1c-8.838 0-16-7.164-16-16L239.1 64.13c0-8.836 7.164-16 16-16h128L384 96c0 17.67 14.33 32 32 32h47.1V320zM272 448c0 8.836-7.164 16-16 16H63.1c-8.838 0-16-7.164-16-16L47.98 192.1c0-8.836 7.164-16 16-16H160V128H63.99c-35.35 0-64 28.65-64 64l.0098 256C.002 483.3 28.66 512 64 512h192c35.2 0 64-28.8 64-64v-32h-47.1L272 448z"/></svg></span></template>
+        <template id=fa-play><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80V432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z"/></svg></span></template>
+        <template id=fa-clock-rotate-left><span class=fa-svg><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. --><path d="M75 75L41 41C25.9 25.9 0 36.6 0 57.9V168c0 13.3 10.7 24 24 24H134.1c21.4 0 32.1-25.9 17-41l-30.8-30.8C155 85.5 203 64 256 64c106 0 192 86 192 192s-86 192-192 192c-40.8 0-78.6-12.7-109.7-34.4c-14.5-10.1-34.4-6.6-44.6 7.9s-6.6 34.4 7.9 44.6C151.2 495 201.7 512 256 512c141.4 0 256-114.6 256-256S397.4 0 256 0C185.3 0 121.3 28.7 75 75zm181 53c-13.3 0-24 10.7-24 24V256c0 6.4 2.5 12.5 7 17l72 72c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-65-65V152c0-13.3-10.7-24-24-24z"/></svg></span></template>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="elasticlunr-ef4e11c1.min.js"></script>
+        <script src="mark-09e88c2c.min.js"></script>
+        <script src="searcher-c2a407aa.js"></script>
+
+        <script src="clipboard-1626706a.min.js"></script>
+        <script src="highlight-abc7f01d.js"></script>
+        <script src="book-a0b12cfe.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="theme/tabs-6977231d.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
